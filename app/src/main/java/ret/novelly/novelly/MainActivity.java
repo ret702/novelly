@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 1; i <= db.getAllStorys().size(); i++) {
             int test= db.getAllStorys().size();
             item.add(db.getStory(i).getUserStory());
-
         }
     }
 

@@ -54,9 +54,10 @@ public class database extends SQLiteOpenHelper {
     // Storys Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_TITLE = "title";
-    private static final String KEY_AUTHOR = "author";
+    private static final String KEY_STORY = "story";
 
-    private static final String[] COLUMNS = {KEY_ID,KEY_TITLE,KEY_AUTHOR};
+
+    private static final String[] COLUMNS = {KEY_ID,KEY_TITLE, KEY_STORY};
 
     public void addStory(Story Story){
         // 1. get reference to writable DB
@@ -64,8 +65,8 @@ public class database extends SQLiteOpenHelper {
 
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(KEY_TITLE,"test"); // get title
-        values.put(KEY_AUTHOR,"haha"); // get author
+        values.put(KEY_TITLE,Story.getTitle()); // get title
+        values.put(KEY_STORY,Story.getUserStory()); // get title
 
         // 3. insert
         db.insert(TABLE_StoryS, // table
@@ -99,6 +100,7 @@ public class database extends SQLiteOpenHelper {
         Story Story = new Story();
         Story.setID(Integer.parseInt(cursor.getString(0)));
         Story.setTitle(cursor.getString(1));
+        Story.setUserStory(cursor.getString(2));
 
 
         Log.d("getStory(" + id + ")", Story.toString());

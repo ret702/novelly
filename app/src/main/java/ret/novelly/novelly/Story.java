@@ -46,6 +46,6 @@ public class Story {
     }
     String getUserStory()
     {
-        return title;
+        return userStory;
     }
 }
