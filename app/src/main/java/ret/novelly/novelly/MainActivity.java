@@ -3,7 +3,6 @@ package ret.novelly.novelly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,21 +28,27 @@ public class MainActivity extends AppCompatActivity {
         final ArrayAdapter<String> adaptor;
         database db = new database(getApplicationContext());
 
-        for(int i=1; i<= db.getAllStorys().size(); i++)
-        {
+    if(db.isEmpty()!=true)
+    {
+        for (int i = 1; i <= db.getAllStorys().size(); i++) {
+            int test= db.getAllStorys().size();
             item.add(db.getStory(i).getUserStory());
+
         }
-        adaptor= new ArrayAdapter<String>(getApplicationContext(),R.layout.mainpagelayout,item);
+    }
+
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
         userStories.setAdapter(adaptor);
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int offSet=1;
+                int offSet = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-                gotoStory.putExtra("position", (position+offSet));
+                gotoStory.putExtra("position", (position + offSet));
                 startActivity(gotoStory);
             }
         });
+
     }
 
     @Override
@@ -63,6 +68,17 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id== R.id.storycreate)
+        {
+            Intent intent = new Intent(MainActivity.this, submitStory.class );
+            startActivity(intent);
+        }
+        else if (id==R.id.deleteall)
+        {
+            database db = new database(getApplicationContext());
+            db.clearDB();
+            recreate();
         }
 
         return super.onOptionsItemSelected(item);

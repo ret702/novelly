@@ -9,13 +9,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class ViewStoryClass extends AppCompatActivity {
-
+    int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewstory);
         Bundle extra = getIntent().getExtras();
-         int position= (int) extra.getLong("position");
+         position= (int) extra.getLong("position");
         database db = new database(getApplicationContext());
         ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(position).getUserStory());
 

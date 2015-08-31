@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 
 public class submitStory extends AppCompatActivity {
@@ -25,10 +26,12 @@ public class submitStory extends AppCompatActivity {
                 database db = new database(getApplicationContext());
                 Story story = new Story();
                 String userText;
-                userText=   (((Button) findViewById(R.id.button_submitstory)).getText()).toString();
+                userText=   (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
                 story.setUserStory(userText);
                 Log.e("test", userText);
                 db.addStory(story);
+                db.close();
+
             }
         });
     }

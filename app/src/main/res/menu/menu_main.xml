@@ -10,4 +10,8 @@
         android:title="@string/Create_Story"
         android:id="@+id/storycreate"
     />
+    <item
+        android:title="@string/Delete_All"
+        android:id="@+id/deleteall"
+        />
 </menu>

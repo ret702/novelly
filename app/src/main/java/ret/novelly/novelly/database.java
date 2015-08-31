@@ -101,7 +101,7 @@ public class database extends SQLiteOpenHelper {
         Story.setTitle(cursor.getString(1));
 
 
-        Log.d("getStory("+id+")", Story.toString());
+        Log.d("getStory(" + id + ")", Story.toString());
             db.close();
         // 5. return Story
         return Story;
@@ -177,6 +177,37 @@ public class database extends SQLiteOpenHelper {
         db.close();
 
         Log.d("deleteStory", Story.toString());
+
+    }
+
+    public void clearDB()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_StoryS + "'");
+        db.delete(TABLE_StoryS, null, null);
+    }
+
+   public boolean isEmpty()
+    {
+        boolean empty;
+        // 1. build the query
+        String query = "SELECT  * FROM " + TABLE_StoryS;
+
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. go over each row, build Story and add it to list
+        Story Story = null;
+        if ( cursor.getCount()==0 )
+        {
+            empty=true;
+        }
+        else {
+            empty=false;
+        }
+
+        return empty;
 
     }
 }
