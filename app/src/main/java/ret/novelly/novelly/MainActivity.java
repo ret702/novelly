@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
         final ArrayAdapter<String> adaptor;
         database db = new database(getApplicationContext());
 
-    if(db.isEmpty()!=true)
-    {
+        db.getWritableDatabase();
+    if(db.isEmpty()!=true) {
         for (int i = 1; i <= db.getAllStorys().size(); i++) {
-            int test= db.getAllStorys().size();
+            int test = db.getAllStorys().size();
             item.add(db.getStory(i).getUserStory());
         }
-    }
+
 
         adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
         userStories.setAdapter(adaptor);
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(gotoStory);
             }
         });
+    }
 
     }
 

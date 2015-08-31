@@ -24,15 +24,16 @@ public class database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         // SQL statement to create Story table
         String CREATE_Story_TABLE = "CREATE TABLE Storys ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT, "+
-                "author TEXT )";
-
-        // create Storys table
+                "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
+        db.close();
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -41,6 +42,7 @@ public class database extends SQLiteOpenHelper {
 
         // create fresh Storys table
         this.onCreate(db);
+        db.close();
     }
     //---------------------------------------------------------------------
 
@@ -66,7 +68,7 @@ public class database extends SQLiteOpenHelper {
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE,Story.getTitle()); // get title
-        values.put(KEY_STORY,Story.getUserStory()); // get title
+        values.put(KEY_STORY,Story.getUserStory()); // get story
 
         // 3. insert
         db.insert(TABLE_StoryS, // table
@@ -135,7 +137,7 @@ public class database extends SQLiteOpenHelper {
         }
 
         Log.d("getAllStorys()", Storys.toString());
-
+        db.close();
         // return Storys
         return Storys;
     }
@@ -163,6 +165,12 @@ public class database extends SQLiteOpenHelper {
         return i;
 
     }
+    void deleteTable(String table)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE " + table);
+        db.close();
+    }
 
     // Deleting single Story
     public void deleteStory(Story Story) {
@@ -187,27 +195,36 @@ public class database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_StoryS + "'");
         db.delete(TABLE_StoryS, null, null);
+        db.close();
     }
 
    public boolean isEmpty()
     {
-        boolean empty;
+        boolean empty=true;
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE_StoryS;
 
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+
+        try {
+            Cursor cursor = db.rawQuery(query, null);
+            if ( cursor.getCount()==0 )
+            {
+                empty=true;
+            }
+            else {
+                empty=false;
+            }
+
+        }
+        catch(Exception e)
+        {
+
+        }
 
         // 3. go over each row, build Story and add it to list
-        Story Story = null;
-        if ( cursor.getCount()==0 )
-        {
-            empty=true;
-        }
-        else {
-            empty=false;
-        }
+      db.close();
 
         return empty;
 
