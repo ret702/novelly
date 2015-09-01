@@ -14,10 +14,10 @@ public class ViewStoryClass extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewstory);
-        Bundle extra = getIntent().getExtras();
-         position= (int) extra.getLong("position");
+        Bundle extra =getIntent().getExtras();
+         position=  extra.getInt("position");
         database db = new database(getApplicationContext());
-        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(position).getUserStory());
+        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory((position)).getUserStory());
 
     }
 

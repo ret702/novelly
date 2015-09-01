@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         database db = new database(getApplicationContext());
 
         db.getWritableDatabase();
+
     if(db.isEmpty()!=true) {
         for (int i = 1; i <= db.getAllStorys().size(); i++) {
             int test = db.getAllStorys().size();
