@@ -28,6 +28,7 @@ public class database extends SQLiteOpenHelper {
         // SQL statement to create Story table
         String CREATE_Story_TABLE = "CREATE TABLE Storys ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "userID INTERGER, " +
                 "title TEXT, "+
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);

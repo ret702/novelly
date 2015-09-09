@@ -10,6 +10,7 @@ public class user {
 
     public void createUser()
     {
+
         UUID test = UUID.randomUUID();
     }
     public String getStory()
