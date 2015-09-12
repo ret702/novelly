@@ -1,6 +1,7 @@
 package ret.novelly.novelly;
 
 
+import java.util.UUID;
 
 /**
  * Created by ret70 on 8/28/2015.
@@ -9,7 +10,7 @@ public class Story {
 
     String title;
     String userStory;
-    int id;
+    UUID id;
 
     Story()
     {
@@ -22,7 +23,7 @@ public class Story {
 
     }
 
-    void setID(int id){
+    void setID(UUID id){
         this.id=id;
 
     }
@@ -36,7 +37,7 @@ public class Story {
         userStory=s;
     }
 
-    int getID()
+    UUID getID()
     {
         return id;
     }

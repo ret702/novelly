@@ -9,7 +9,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class ViewStoryClass extends AppCompatActivity {
-    int position;
+    private int position;
+    private int storyID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +19,7 @@ public class ViewStoryClass extends AppCompatActivity {
         Bundle extra =getIntent().getExtras();
          position=  extra.getInt("position");
         database db = new database(getApplicationContext());
+        storyID=  db.getStory((position)).getID();
         ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory((position)).getUserStory());
 
     }
@@ -42,6 +45,8 @@ public class ViewStoryClass extends AppCompatActivity {
         else if (id== R.id.editstory)
         {
             Intent intent = new Intent(ViewStoryClass.this, submitStory.class );
+            intent.putExtra("storyID", storyID);
+            startActivity(intent);
 
         }
 

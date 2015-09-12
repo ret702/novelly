@@ -10,16 +10,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 
 public class submitStory extends AppCompatActivity {
+
+    private int storyID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_edit_page);
 
-        Button subButton = (Button) findViewById(R.id.button_submitstory);
+        Bundle extra =getIntent().getExtras();
+        extra.getInt("storyID");
 
+        Log.v("storyID", Integer.toString(storyID));
+
+        UUID storyID=UUID.randomUUID();
+
+
+        Button subButton = (Button) findViewById(R.id.button_submitstory);
         subButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

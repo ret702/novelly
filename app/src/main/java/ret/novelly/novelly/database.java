@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class database extends SQLiteOpenHelper {
 
@@ -29,10 +30,11 @@ public class database extends SQLiteOpenHelper {
         String CREATE_Story_TABLE = "CREATE TABLE Storys ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "userID INTERGER, " +
+                "storyID TEXT, " +
                 "title TEXT, "+
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
-        db.close();
+
     }
 
 
@@ -58,9 +60,9 @@ public class database extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_TITLE = "title";
     private static final String KEY_STORY = "story";
+    private static final String KEY_STORYID = "storyID";
 
-
-    private static final String[] COLUMNS = {KEY_ID,KEY_TITLE, KEY_STORY};
+    private static final String[] COLUMNS = {KEY_ID,KEY_TITLE, KEY_STORY,KEY_STORYID};
 
     public void addStory(Story Story){
         // 1. get reference to writable DB
@@ -70,6 +72,7 @@ public class database extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE,Story.getTitle()); // get title
         values.put(KEY_STORY,Story.getUserStory()); // get story
+        values.put(KEY_STORYID, UUID.randomUUID().toString());
 
         // 3. insert
         db.insert(TABLE_StoryS, // table
@@ -79,7 +82,7 @@ public class database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Story getStory(int id){
+    public Story getStory(UUID storyID){
 
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
@@ -88,8 +91,8 @@ public class database extends SQLiteOpenHelper {
         Cursor cursor =
                 db.query(TABLE_StoryS, // a. table
                         COLUMNS, // b. column names
-                        " id = ?", // c. selections
-                        new String[] { String.valueOf(id) }, // d. selections args
+                        " storyID = ?", // c. selections
+                        new String[] { String.valueOf(storyID) }, // d. selections args
                         null, // e. group by
                         null, // f. having
                         null, // g. order by
@@ -101,12 +104,12 @@ public class database extends SQLiteOpenHelper {
 
         // 4. build Story object
         Story Story = new Story();
-        Story.setID(Integer.parseInt(cursor.getString(0)));
+        Story.setID(UUID.fromString(cursor.getString(cursor.getColumnIndex("storyID"))));
         Story.setTitle(cursor.getString(1));
         Story.setUserStory(cursor.getString(2));
 
 
-        Log.d("getStory(" + id + ")", Story.toString());
+        Log.d("getStory(" + storyID + ")", Story.toString());
             db.close();
         // 5. return Story
         return Story;
@@ -128,7 +131,7 @@ public class database extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Story = new Story();
-                Story.setID(Integer.parseInt(cursor.getString(0)));
+                Story.setID(UUID.fromString(cursor.getString(cursor.getColumnIndex("storyID"))));
                 Story.setTitle(cursor.getString(1));
 
 
