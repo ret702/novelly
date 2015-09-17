@@ -8,19 +8,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 public class ViewStoryClass extends AppCompatActivity {
-    private int position;
-    private int storyID;
+    private String storyID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewstory);
         Bundle extra =getIntent().getExtras();
-         position=  extra.getInt("position");
         database db = new database(getApplicationContext());
-        storyID=  db.getStory((position)).getID();
-        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory((position)).getUserStory());
+        db.getWritableDatabase();
+        storyID= extra.getString("storyID");
+        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(UUID.fromString(storyID)).getUserStory());
 
     }
 

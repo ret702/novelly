@@ -8,9 +8,9 @@ import java.util.UUID;
  */
 public class Story {
 
-    String title;
-    String userStory;
-    UUID id;
+   private String title;
+    private String userStory;
+    private UUID id;
 
     Story()
     {

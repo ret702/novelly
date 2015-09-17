@@ -23,22 +23,22 @@ public class submitStory extends AppCompatActivity {
         setContentView(R.layout.activity_user_edit_page);
 
         Bundle extra =getIntent().getExtras();
-        extra.getInt("storyID");
-
+       // extra.getInt("storyID");
         Log.v("storyID", Integer.toString(storyID));
-
-        UUID storyID=UUID.randomUUID();
-
+        final UUID storyID=UUID.randomUUID();
+        final database db = new database(getApplicationContext());
+        db.getWritableDatabase();
 
         Button subButton = (Button) findViewById(R.id.button_submitstory);
         subButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database db = new database(getApplicationContext());
+
                 Story story = new Story();
                 String userText;
                 userText=   (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
                 story.setUserStory(userText);
+                story.setID(storyID);
                 Log.e("test", userText);
                 db.addStory(story);
                 db.close();

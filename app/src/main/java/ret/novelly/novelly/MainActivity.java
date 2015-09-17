@@ -3,6 +3,7 @@ package ret.novelly.novelly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,27 +27,32 @@ public class MainActivity extends AppCompatActivity {
       final ListView userStories = (ListView) findViewById(R.id.mainlistview);
 
         ArrayList<String> item = new ArrayList<String>();
-
+        final HashMap storyIDs = new HashMap();
         final ArrayAdapter<String> adaptor;
-        database db = new database(getApplicationContext());
+       final database db = new database(getApplicationContext());
 
-        db.getWritableDatabase();
+            db.getWritableDatabase();
 
     if(db.isEmpty()!=true) {
-        for (int i = 1; i <= db.getAllStorys().size(); i++) {
-            int test = db.getAllStorys().size();
-            item.add(db.getStory(i).getUserStory());
+        for (int i = 0; i <= db.getAllStorys().size(); i++) {
+            item.add(db.getAllStorys().get(i).getUserStory());
+            Log.v("testID", db.getAllStorys().get(i).getUserStory());
+           storyIDs.put(item.size(),(db.getAllStorys().get(i).getID()));
         }
 
 
         adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
+
         userStories.setAdapter(adaptor);
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int offSet = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-                gotoStory.putExtra("position", (position + offSet));
+
+                if(db.isEmpty()!=true) {
+                    gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position + 1))).toString());
+                }
                 startActivity(gotoStory);
             }
         });

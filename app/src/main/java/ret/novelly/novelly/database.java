@@ -17,7 +17,7 @@ public class database extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "StoryDB.db";
+    private static final String DATABASE_NAME = "Storytest.db";
 
     public database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -105,8 +105,8 @@ public class database extends SQLiteOpenHelper {
         // 4. build Story object
         Story Story = new Story();
         Story.setID(UUID.fromString(cursor.getString(cursor.getColumnIndex("storyID"))));
-        Story.setTitle(cursor.getString(1));
-        Story.setUserStory(cursor.getString(2));
+        Story.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        Story.setUserStory(cursor.getString(cursor.getColumnIndex("story")));
 
 
         Log.d("getStory(" + storyID + ")", Story.toString());
@@ -132,7 +132,8 @@ public class database extends SQLiteOpenHelper {
             do {
                 Story = new Story();
                 Story.setID(UUID.fromString(cursor.getString(cursor.getColumnIndex("storyID"))));
-                Story.setTitle(cursor.getString(1));
+                Story.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                Story.setUserStory(cursor.getString(cursor.getColumnIndex("story")));
 
 
                 // Add Story to Storys
