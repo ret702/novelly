@@ -3,7 +3,6 @@ package ret.novelly.novelly;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,17 +14,37 @@ import java.util.UUID;
 
 public class submitStory extends AppCompatActivity {
 
-    private int storyID;
+    private UUID storyID;
+    private boolean isPaste;
+    private UUID pasteID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_edit_page);
 
-        Bundle extra =getIntent().getExtras();
-       // extra.getInt("storyID");
-        Log.v("storyID", Integer.toString(storyID));
-        final UUID storyID=UUID.randomUUID();
+        Bundle extra = getIntent().getExtras();
+
+        try{
+            storyID = UUID.fromString(extra.getString("storyID"));
+            isPaste = true;
+            pasteID = UUID.randomUUID();
+
+        }
+        catch(Exception e)
+        {
+            if(e.getClass() == NullPointerException.class) {
+                isPaste = false;
+                UUID storyID = UUID.randomUUID();
+            }
+        }
+        finally
+        {
+
+        }
+
+
+
         final database db = new database(getApplicationContext());
         db.getWritableDatabase();
 
@@ -36,11 +55,14 @@ public class submitStory extends AppCompatActivity {
 
                 Story story = new Story();
                 String userText;
-                userText=   (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
+                userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
                 story.setUserStory(userText);
                 story.setID(storyID);
-                Log.e("test", userText);
-                db.addStory(story);
+                if (isPaste) {
+                    db.addPaste(storyID, pasteID);
+                } else {
+                    db.addStory(story);
+                }
                 db.close();
 
             }

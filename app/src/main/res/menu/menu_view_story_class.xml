@@ -6,7 +6,7 @@
         android:orderInCategory="100" app:showAsAction="never" />
 
     <item
-        android:title="@string/Edit_Story"
-        android:id="@+id/editstory"
+        android:title="@string/Add_To_Story"
+        android:id="@+id/AddToStory"
         />
 </menu>

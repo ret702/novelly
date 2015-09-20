@@ -34,24 +34,22 @@ public class MainActivity extends AppCompatActivity {
             db.getWritableDatabase();
 
     if(db.isEmpty()!=true) {
-        for (int i = 0; i <= db.getAllStorys().size(); i++) {
+        for (int i = 0; i < db.getAllStorys().size(); i++) {
             item.add(db.getAllStorys().get(i).getUserStory());
             Log.v("testID", db.getAllStorys().get(i).getUserStory());
-           storyIDs.put(item.size(),(db.getAllStorys().get(i).getID()));
+           storyIDs.put(Integer.toString(item.size()),db.getAllStorys().get(i).getID());
         }
-
-
         adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
 
         userStories.setAdapter(adaptor);
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int offSet = 1;
+                int offset = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
 
                 if(db.isEmpty()!=true) {
-                    gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position + 1))).toString());
+                    gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position+offset))).toString());
                 }
                 startActivity(gotoStory);
             }

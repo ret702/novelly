@@ -6,7 +6,7 @@
     <string name="title_activity_user_page">userPageActivity</string>
     <string name="Create_Story">Create Story</string>
     <string name="title_activity_view_story_class">ViewStoryClass</string>
-    <string name="Edit_Story">Add To Story</string>
+    <string name="Add_To_Story">Add To Story</string>
     <string name="Delete_All">Delete All</string>
 
 </resources>

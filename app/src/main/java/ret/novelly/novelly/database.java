@@ -35,6 +35,9 @@ public class database extends SQLiteOpenHelper {
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
 
+        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT)";
+        db.execSQL(Create_Paste_Table);
+
     }
 
 
@@ -42,6 +45,7 @@ public class database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older Storys table if existed
         db.execSQL("DROP TABLE IF EXISTS Storys");
+        db.execSQL("DROP TABLE IF EXISTS Pastes");
 
         // create fresh Storys table
         this.onCreate(db);
@@ -55,6 +59,8 @@ public class database extends SQLiteOpenHelper {
 
     // Storys table name
     private static final String TABLE_StoryS = "Storys";
+
+    private static final String TABLE_Pastes = "Pastes";
 
     // Storys Table Columns names
     private static final String KEY_ID = "id";
@@ -169,6 +175,20 @@ public class database extends SQLiteOpenHelper {
 
         return i;
 
+    }
+
+    public void addPaste(UUID storyID, UUID pasteID)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("storyID",storyID.toString());
+        values.put("pasteID",pasteID.toString());
+
+        db.insert(TABLE_Pastes, // table
+                null, //nullColumnHack
+                values); // key/value -> keys = column names/ values = column values
+
+       db.close();
     }
     void deleteTable(String table)
     {
