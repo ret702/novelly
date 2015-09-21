@@ -1,6 +1,7 @@
 package ret.novelly.novelly;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+import android.os.Handler;
 
 import java.util.UUID;
 
@@ -25,24 +28,17 @@ public class submitStory extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
 
-        try{
+        try {
             storyID = UUID.fromString(extra.getString("storyID"));
             isPaste = true;
             pasteID = UUID.randomUUID();
 
-        }
-        catch(Exception e)
-        {
-            if(e.getClass() == NullPointerException.class) {
+        } catch (Exception e) {
+            if (e.getClass() == NullPointerException.class) {
                 isPaste = false;
                 UUID storyID = UUID.randomUUID();
             }
         }
-        finally
-        {
-
-        }
-
 
 
         final database db = new database(getApplicationContext());
@@ -50,23 +46,37 @@ public class submitStory extends AppCompatActivity {
 
         Button subButton = (Button) findViewById(R.id.button_submitstory);
         subButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                         @Override
+                                         public void onClick(View v) {
 
-                Story story = new Story();
-                String userText;
-                userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
-                story.setUserStory(userText);
-                story.setID(storyID);
-                if (isPaste) {
-                    db.addPaste(storyID, pasteID);
-                } else {
-                    db.addStory(story);
-                }
-                db.close();
+                                             Story story = new Story();
+                                             String userText;
+                                             userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
+                                             story.setUserStory(userText);
+                                             story.setID(storyID);
+                                             if (isPaste) {
+                                                 db.addPaste(storyID, pasteID);
 
-            }
-        });
+                                                 Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
+
+                                                 Handler mHandler = new Handler();
+                                                 mHandler.postDelayed(new Runnable() {
+                                                     public void run() {
+                                                         startActivity(new Intent(submitStory.this, UserPage.class));
+                                                     }
+                                                 }, 1500);
+                                             } else
+
+                                             {
+                                                 db.addStory(story);
+                                             }
+
+                                             db.close();
+
+                                         }
+                                     }
+
+        );
     }
 
 
