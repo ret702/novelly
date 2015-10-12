@@ -43,6 +43,12 @@ public class ViewStoryClass extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if( id  == R.id.ViewPastes)
+        {
+           // Intent intent = new Intent(ViewStoryClass.this, submitStory.class );
+           // intent.putExtra("storyID", storyID);
+            //startActivity(intent);
+        }
         else if (id== R.id.AddToStory)
         {
             Intent intent = new Intent(ViewStoryClass.this, submitStory.class );

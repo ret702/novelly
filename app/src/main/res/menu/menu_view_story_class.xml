@@ -6,6 +6,11 @@
         android:orderInCategory="100" app:showAsAction="never" />
 
     <item
+        android:title="@string/View_Pastes"
+        android:id="@+id/ViewPastes"
+        />
+
+    <item
         android:title="@string/Add_To_Story"
         android:id="@+id/AddToStory"
         />

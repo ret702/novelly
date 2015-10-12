@@ -8,9 +8,11 @@
     <string name="title_activity_view_story_class">ViewStoryClass</string>
     <string name="Add_To_Story">Add To Story</string>
     <string name="Delete_All">Delete All</string>
+    <string name="View_Pastes">View Pastes</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="title_activity_view_pastes">ViewPastes</string>
 
 </resources>
