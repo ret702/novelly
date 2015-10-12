@@ -35,7 +35,7 @@ public class database extends SQLiteOpenHelper {
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
 
-        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT)";
+        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, paste TEXT)";
         db.execSQL(Create_Paste_Table);
 
     }
@@ -153,6 +153,40 @@ public class database extends SQLiteOpenHelper {
         return Storys;
     }
 
+
+
+
+    public List<Story> getAllPastes() {
+        List<Story> Storys = new LinkedList<Story>();
+
+        // 1. build the query
+        String query = "SELECT  * FROM " + TABLE_Pastes;
+
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. go over each row, build Story and add it to list
+        Story Story = null;
+        if (cursor.moveToFirst()) {
+            do {
+
+
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        db.close();
+        // return Storys
+        return Storys;
+    }
+
+
+
+
+
     // Updating single Story
     public int updateStory(Story Story) {
 
@@ -177,12 +211,13 @@ public class database extends SQLiteOpenHelper {
 
     }
 
-    public void addPaste(UUID storyID, UUID pasteID)
+    public void addPaste(UUID storyID, UUID pasteID, String paste)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put("storyID",storyID.toString());
         values.put("pasteID",pasteID.toString());
+        values.put("paste",paste);
 
         db.insert(TABLE_Pastes, // table
                 null, //nullColumnHack
@@ -223,11 +258,11 @@ public class database extends SQLiteOpenHelper {
         db.close();
     }
 
-   public boolean isEmpty()
+   public boolean isEmpty(String table)
     {
         boolean empty=true;
         // 1. build the query
-        String query = "SELECT  * FROM " + TABLE_StoryS;
+        String query = "SELECT  * FROM " + table;
 
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();

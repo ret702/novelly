@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
             db.getWritableDatabase();
 
-    if(db.isEmpty()!=true) {
+    if(db.isEmpty("Storys")!=true) {
         for (int i = 0; i < db.getAllStorys().size(); i++) {
             item.add(db.getAllStorys().get(i).getUserStory());
             Log.v("testID", db.getAllStorys().get(i).getUserStory());
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 int offset = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
 
-                if(db.isEmpty()!=true) {
+                if(db.isEmpty("Storys")!=true) {
                     gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position+offset))).toString());
                 }
                 startActivity(gotoStory);

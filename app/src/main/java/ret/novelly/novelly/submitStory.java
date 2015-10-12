@@ -55,7 +55,7 @@ public class submitStory extends AppCompatActivity {
                                              story.setUserStory(userText);
                                              story.setID(storyID);
                                              if (isPaste) {
-                                                 db.addPaste(storyID, pasteID);
+                                                 db.addPaste(storyID, pasteID, userText);
 
                                                  Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
 
