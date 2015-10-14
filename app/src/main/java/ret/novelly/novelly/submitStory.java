@@ -27,7 +27,7 @@ public class submitStory extends AppCompatActivity {
         setContentView(R.layout.activity_user_edit_page);
 
         Bundle extra = getIntent().getExtras();
-
+        final String userID= getIntent().getExtras().getString("userID");
         try {
             storyID = UUID.fromString(extra.getString("storyID"));
             isPaste = true;
@@ -55,14 +55,14 @@ public class submitStory extends AppCompatActivity {
                                              story.setUserStory(userText);
                                              story.setID(storyID);
                                              if (isPaste) {
-                                                 db.addPaste(storyID, pasteID, userText);
+                                                 db.addPaste(storyID, pasteID,UUID.fromString(userID), userText);
 
                                                  Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
 
                                                  Handler mHandler = new Handler();
                                                  mHandler.postDelayed(new Runnable() {
                                                      public void run() {
-                                                         startActivity(new Intent(submitStory.this, UserPage.class));
+                                                         startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID",userID));
                                                      }
                                                  }, 1500);
                                              } else

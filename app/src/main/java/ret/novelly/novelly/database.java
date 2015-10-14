@@ -35,7 +35,7 @@ public class database extends SQLiteOpenHelper {
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
 
-        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, paste TEXT)";
+        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT)";
         db.execSQL(Create_Paste_Table);
 
     }
@@ -156,9 +156,9 @@ public class database extends SQLiteOpenHelper {
 
 
 
-    public List<Story> getAllPastes() {
-        List<Story> Storys = new LinkedList<Story>();
-
+    public List<Pastes> getAllPastes() {
+        List<Pastes> pastes = new LinkedList<Pastes>();
+        Pastes paste = new Pastes();
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE_Pastes;
 
@@ -171,16 +171,18 @@ public class database extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
 
-
-
-
+               paste.setID(cursor.getString(cursor.getColumnIndex("pasteID")),
+                       cursor.getString(cursor.getColumnIndex("storyID")));
+                paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
+                paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
+                pastes.add(paste);
             } while (cursor.moveToNext());
         }
 
 
         db.close();
-        // return Storys
-        return Storys;
+        // return pastes
+        return pastes;
     }
 
 
@@ -211,12 +213,13 @@ public class database extends SQLiteOpenHelper {
 
     }
 
-    public void addPaste(UUID storyID, UUID pasteID, String paste)
+    public void addPaste(UUID storyID, UUID pasteID, UUID userID,String paste )
     {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put("storyID",storyID.toString());
         values.put("pasteID",pasteID.toString());
+        values.put("userID", userID.toString());
         values.put("paste",paste);
 
         db.insert(TABLE_Pastes, // table

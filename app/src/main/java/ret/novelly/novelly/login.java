@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
+import java.util.UUID;
+
 public class login extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -87,6 +89,7 @@ public class login extends Activity implements
         // Show the signed-in UI
        Toast.makeText(getApplicationContext(),"Signed in!", Toast.LENGTH_LONG);
         Intent intent = new Intent(login.this,MainActivity.class);
+        intent.putExtra("userID", UUID.randomUUID());
         startActivity(intent);
     }
 

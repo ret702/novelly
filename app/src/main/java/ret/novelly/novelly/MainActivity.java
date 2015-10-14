@@ -14,14 +14,17 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         final String userID= getIntent().getExtras().getString("userID");
         //load stories /imagesview dynamically
 
       final ListView userStories = (ListView) findViewById(R.id.mainlistview);
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     if(db.isEmpty("Storys")!=true) {
         for (int i = 0; i < db.getAllStorys().size(); i++) {
             item.add(db.getAllStorys().get(i).getUserStory());
-            Log.v("testID", db.getAllStorys().get(i).getUserStory());
            storyIDs.put(Integer.toString(item.size()),db.getAllStorys().get(i).getID());
         }
         adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(db.isEmpty("Storys")!=true) {
                     gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position+offset))).toString());
+                  gotoStory.putExtra("userID",userID);
                 }
                 startActivity(gotoStory);
             }
