@@ -15,9 +15,9 @@ import java.util.UUID;
 public class database extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     // Database Name
-    private static final String DATABASE_NAME = "Storytest.db";
+    private static final String DATABASE_NAME = "Novelly.db";
 
     public database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

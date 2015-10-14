@@ -3,6 +3,7 @@ package ret.novelly.novelly;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.os.Handler;
 
 import java.util.UUID;
 
@@ -24,10 +24,10 @@ public class submitStory extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_edit_page);
+        setContentView(R.layout.activity_submitStory);
 
         Bundle extra = getIntent().getExtras();
-        final String userID= extra.getString("userID");
+        final String userID = extra.getString("userID");
         try {
             storyID = UUID.fromString(extra.getString("storyID"));
             isPaste = true;
@@ -52,27 +52,33 @@ public class submitStory extends AppCompatActivity {
                                              userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
 
                                              if (isPaste) {
-                                                 db.addPaste(storyID, pasteID,UUID.fromString(userID), userText);
+                                                 db.addPaste(storyID, pasteID, UUID.fromString(userID), userText);
 
                                                  Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
 
                                                  Handler mHandler = new Handler();
                                                  mHandler.postDelayed(new Runnable() {
                                                      public void run() {
-                                                         startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID",userID));
+                                                         startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID));
                                                      }
                                                  }, 1500);
-                                             } else
-
-                                             {
-                                                 Story story = new Story();
-                                                 story.setUserStory(userText);
-                                                 story.setID(storyID);
-                                                 db.addStory(story);
                                              }
-
-                                             db.close();
-
+                                             else
+                                             {
+                                                 if (!(((EditText) findViewById(R.id.editText_Title)).toString().isEmpty())) {
+                                                     Story story = new Story();
+                                                     story.setUserStory(userText);
+                                                     story.setID(storyID);
+                                                     story.setTitle(((EditText) findViewById(R.id.editText_Title)).toString());
+                                                     db.addStory(story);
+                                                     db.close();
+                                                     startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID));
+                                                 }
+                                                 else
+                                                 {
+                                                     Toast.makeText(submitStory.this, "Please Enter A Title", Toast.LENGTH_SHORT).show();
+                                                 }
+                                             }
                                          }
                                      }
 

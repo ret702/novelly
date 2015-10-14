@@ -3,7 +3,6 @@ package ret.novelly.novelly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
     if(db.isEmpty("Storys")!=true) {
         for (int i = 0; i < db.getAllStorys().size(); i++) {
-            item.add(db.getAllStorys().get(i).getUserStory());
+            item.add(db.getAllStorys().get(i).getTitle());
            storyIDs.put(Integer.toString(item.size()),db.getAllStorys().get(i).getID());
         }
-        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainpagelayout, item);
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainListViewTextbox, item);
 
         userStories.setAdapter(adaptor);
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
