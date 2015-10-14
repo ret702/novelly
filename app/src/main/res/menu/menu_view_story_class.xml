@@ -11,6 +11,12 @@
         />
 
     <item
+        android:title="@string/Delete_Pastes"
+        android:id="@+id/DeletePastes"
+        />
+
+
+    <item
         android:title="@string/Add_To_Story"
         android:id="@+id/AddToStory"
         />

@@ -18,13 +18,14 @@ import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    String userID="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         final String userID= getIntent().getExtras().getString("userID");
+        Bundle extra= getIntent().getExtras();
+       userID= extra.getString("userID");
         //load stories /imagesview dynamically
 
       final ListView userStories = (ListView) findViewById(R.id.mainlistview);
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         else if (id== R.id.storycreate)
         {
             Intent intent = new Intent(MainActivity.this, submitStory.class );
+            intent.putExtra("userID",userID);
             startActivity(intent);
         }
         else if (id==R.id.deleteall)

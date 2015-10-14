@@ -89,7 +89,7 @@ public class login extends Activity implements
         // Show the signed-in UI
        Toast.makeText(getApplicationContext(),"Signed in!", Toast.LENGTH_LONG);
         Intent intent = new Intent(login.this,MainActivity.class);
-        intent.putExtra("userID", UUID.randomUUID());
+        intent.putExtra("userID", UUID.randomUUID().toString());
         startActivity(intent);
     }
 

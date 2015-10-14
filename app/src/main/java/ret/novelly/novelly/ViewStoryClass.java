@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class ViewStoryClass extends AppCompatActivity {
     private String storyID;
-
+     String userID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +21,7 @@ public class ViewStoryClass extends AppCompatActivity {
         database db = new database(getApplicationContext());
         db.getWritableDatabase();
         storyID= extra.getString("storyID");
+         userID = extra.getString("userID");
         ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(UUID.fromString(storyID)).getUserStory());
 
     }
@@ -43,15 +44,21 @@ public class ViewStoryClass extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
+       else if( id == R.id.DeletePastes){
+            (new database(getApplicationContext())).deleteTable("Pastes");
+        }
         else if( id  == R.id.ViewPastes)
         {
-           // Intent intent = new Intent(ViewStoryClass.this, submitStory.class );
-           // intent.putExtra("storyID", storyID);
-            //startActivity(intent);
+            Intent intent = new Intent(ViewStoryClass.this, ViewPastes.class );
+            intent.putExtra("storyID", storyID);
+            startActivity(intent);
         }
         else if (id== R.id.AddToStory)
         {
+
             Intent intent = new Intent(ViewStoryClass.this, submitStory.class );
+            intent.putExtra("userID", userID);
             intent.putExtra("storyID", storyID);
             startActivity(intent);
 

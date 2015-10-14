@@ -171,10 +171,11 @@ public class database extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
 
-               paste.setID(cursor.getString(cursor.getColumnIndex("pasteID")),
-                       cursor.getString(cursor.getColumnIndex("storyID")));
-                paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
+               paste.setID(cursor.getString(cursor.getColumnIndex("storyID")),
+                       cursor.getString(cursor.getColumnIndex("pasteID")));
                 paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
+                paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
+
                 pastes.add(paste);
             } while (cursor.moveToNext());
         }
@@ -258,6 +259,8 @@ public class database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_StoryS + "'");
         db.delete(TABLE_StoryS, null, null);
+        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_Pastes + "'");
+        db.delete(TABLE_Pastes, null, null);
         db.close();
     }
 

@@ -27,7 +27,7 @@ public class submitStory extends AppCompatActivity {
         setContentView(R.layout.activity_user_edit_page);
 
         Bundle extra = getIntent().getExtras();
-        final String userID= getIntent().getExtras().getString("userID");
+        final String userID= extra.getString("userID");
         try {
             storyID = UUID.fromString(extra.getString("storyID"));
             isPaste = true;
@@ -48,12 +48,9 @@ public class submitStory extends AppCompatActivity {
         subButton.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-
-                                             Story story = new Story();
                                              String userText;
                                              userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
-                                             story.setUserStory(userText);
-                                             story.setID(storyID);
+
                                              if (isPaste) {
                                                  db.addPaste(storyID, pasteID,UUID.fromString(userID), userText);
 
@@ -68,6 +65,9 @@ public class submitStory extends AppCompatActivity {
                                              } else
 
                                              {
+                                                 Story story = new Story();
+                                                 story.setUserStory(userText);
+                                                 story.setID(storyID);
                                                  db.addStory(story);
                                              }
 
