@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             item.add(db.getAllStorys().get(i).getTitle());
            storyIDs.put(Integer.toString(item.size()),db.getAllStorys().get(i).getID());
         }
-        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainListViewTextbox, item);
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
 
         userStories.setAdapter(adaptor);
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {

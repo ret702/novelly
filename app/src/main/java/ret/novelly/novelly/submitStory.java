@@ -24,7 +24,7 @@ public class submitStory extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_submitStory);
+        setContentView(R.layout.activity_submittory);
 
         Bundle extra = getIntent().getExtras();
         final String userID = extra.getString("userID");
