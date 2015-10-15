@@ -1,6 +1,7 @@
 package ret.novelly.novelly;
 
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -31,11 +33,11 @@ public class database extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "userID INTERGER, " +
                 "storyID TEXT, " +
-                "title TEXT, "+
+                "title TEXT, " +
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
 
-        String Create_Paste_Table= "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT)";
+        String Create_Paste_Table = "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT)";
         db.execSQL(Create_Paste_Table);
 
     }
@@ -68,16 +70,16 @@ public class database extends SQLiteOpenHelper {
     private static final String KEY_STORY = "story";
     private static final String KEY_STORYID = "storyID";
 
-    private static final String[] COLUMNS = {KEY_ID,KEY_TITLE, KEY_STORY,KEY_STORYID};
+    private static final String[] COLUMNS = {KEY_ID, KEY_TITLE, KEY_STORY, KEY_STORYID};
 
-    public void addStory(Story Story){
+    public void addStory(Story Story) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(KEY_TITLE,Story.getTitle()); // get title
-        values.put(KEY_STORY,Story.getUserStory()); // get story
+        values.put(KEY_TITLE, Story.getTitle()); // get title
+        values.put(KEY_STORY, Story.getUserStory()); // get story
         values.put(KEY_STORYID, UUID.randomUUID().toString());
 
         // 3. insert
@@ -88,7 +90,7 @@ public class database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Story getStory(UUID storyID){
+    public Story getStory(UUID storyID) {
 
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
@@ -98,7 +100,7 @@ public class database extends SQLiteOpenHelper {
                 db.query(TABLE_StoryS, // a. table
                         COLUMNS, // b. column names
                         " storyID = ?", // c. selections
-                        new String[] { String.valueOf(storyID) }, // d. selections args
+                        new String[]{String.valueOf(storyID)}, // d. selections args
                         null, // e. group by
                         null, // f. having
                         null, // g. order by
@@ -116,7 +118,7 @@ public class database extends SQLiteOpenHelper {
 
 
         Log.d("getStory(" + storyID + ")", Story.toString());
-            db.close();
+        db.close();
         // 5. return Story
         return Story;
     }
@@ -154,8 +156,6 @@ public class database extends SQLiteOpenHelper {
     }
 
 
-
-
     public List<Pastes> getAllPastes() {
         List<Pastes> pastes = new LinkedList<Pastes>();
         Pastes paste = new Pastes();
@@ -171,8 +171,8 @@ public class database extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
 
-               paste.setID(cursor.getString(cursor.getColumnIndex("storyID")),
-                       cursor.getString(cursor.getColumnIndex("pasteID")));
+                paste.setID(cursor.getString(cursor.getColumnIndex("storyID")),
+                        cursor.getString(cursor.getColumnIndex("pasteID")));
                 paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
                 paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
 
@@ -185,9 +185,6 @@ public class database extends SQLiteOpenHelper {
         // return pastes
         return pastes;
     }
-
-
-
 
 
     // Updating single Story
@@ -204,8 +201,8 @@ public class database extends SQLiteOpenHelper {
         // 3. updating row
         int i = db.update(TABLE_StoryS, //table
                 values, // column/value
-                KEY_ID+" = ?", // selections
-                new String[] { String.valueOf(Story.getID()) }); //selection args
+                KEY_ID + " = ?", // selections
+                new String[]{String.valueOf(Story.getID())}); //selection args
 
         // 4. close
         db.close();
@@ -214,23 +211,22 @@ public class database extends SQLiteOpenHelper {
 
     }
 
-    public void addPaste(UUID storyID, UUID pasteID, UUID userID,String paste )
-    {
+    public void addPaste(UUID storyID, UUID pasteID, UUID userID, String paste) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        values.put("storyID",storyID.toString());
-        values.put("pasteID",pasteID.toString());
+        values.put("storyID", storyID.toString());
+        values.put("pasteID", pasteID.toString());
         values.put("userID", userID.toString());
-        values.put("paste",paste);
+        values.put("paste", paste);
 
         db.insert(TABLE_Pastes, // table
                 null, //nullColumnHack
                 values); // key/value -> keys = column names/ values = column values
 
-       db.close();
+        db.close();
     }
-    void deleteTable(String table)
-    {
+
+    void deleteTable(String table) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DROP TABLE " + table);
         db.close();
@@ -244,8 +240,8 @@ public class database extends SQLiteOpenHelper {
 
         // 2. delete
         db.delete(TABLE_StoryS,
-                KEY_ID+" = ?",
-                new String[] { String.valueOf(Story.getID()) });
+                KEY_ID + " = ?",
+                new String[]{String.valueOf(Story.getID())});
 
         // 3. close
         db.close();
@@ -254,8 +250,7 @@ public class database extends SQLiteOpenHelper {
 
     }
 
-    public void clearDB()
-    {
+    public void clearDB() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_StoryS + "'");
         db.delete(TABLE_StoryS, null, null);
@@ -264,9 +259,14 @@ public class database extends SQLiteOpenHelper {
         db.close();
     }
 
-   public boolean isEmpty(String table)
-    {
-        boolean empty=true;
+    @TargetApi(18)
+    public void deleteDB() {
+        String myPath = "/data/data/ret.novelly.novelly/databases/Novelly";
+        SQLiteDatabase.deleteDatabase(new File(myPath));
+    }
+
+    public boolean isEmpty(String table) {
+        boolean empty = true;
         // 1. build the query
         String query = "SELECT  * FROM " + table;
 
@@ -275,22 +275,18 @@ public class database extends SQLiteOpenHelper {
 
         try {
             Cursor cursor = db.rawQuery(query, null);
-            if ( cursor.getCount()==0 )
-            {
-                empty=true;
-            }
-            else {
-                empty=false;
+            if (cursor.getCount() == 0) {
+                empty = true;
+            } else {
+                empty = false;
             }
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
 
         }
 
         // 3. go over each row, build Story and add it to list
-      db.close();
+        db.close();
 
         return empty;
 

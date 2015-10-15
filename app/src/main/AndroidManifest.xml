@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".login"
-            android:label="@string/title_activity_login" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,11 +33,11 @@
         </activity>
         <activity
             android:name=".submitStory"
-            android:label="@string/title_activity_user_page" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".ViewStoryClass"
-            android:label="@string/title_activity_view_story_class" >
+            android:label="@string/app_name" >
         </activity>
 
         <meta-data
@@ -46,11 +46,11 @@
 
         <activity
             android:name=".UserPage"
-            android:label="@string/title_activity_user_page" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".ViewPastes"
-            android:label="@string/title_activity_view_pastes" >
+            android:label="@string/app_name" >
         </activity>
     </application>
 
