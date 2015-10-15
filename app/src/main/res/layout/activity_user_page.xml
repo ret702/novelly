@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ret.novelly.novelly.UserPage">
+    tools:context="ret.novelly.novelly.UserPage"
+    android:id="@+id/userpageparent"
+    >
 
 
     <CheckBox
@@ -13,7 +15,12 @@
         android:layout_above="@+id/textView_numOfVotes"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="5dp" />
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignLeft="@+id/textView_numOfVotes"
+        android:layout_alignStart="@+id/textView_numOfVotes"
+        android:gravity="fill" />
 
     <TextView
         android:layout_width="120dp"
@@ -21,12 +28,12 @@
         android:text="Votes"
         android:id="@+id/textView_numOfVotes"
         android:background="@drawable/star"
-        android:gravity="center"
         android:textStyle="bold"
         android:layout_alignBottom="@+id/imageView_up_bookimage"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:gravity="center" />
 
     <ImageView
         android:layout_width="150dp"
@@ -35,7 +42,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/front" />
+        android:src="@drawable/front"
+        android:layout_toLeftOf="@+id/textView_numOfVotes"
+        android:layout_toStartOf="@+id/textView_numOfVotes" />
 
     <TextView
         android:layout_width="match_parent"
@@ -53,32 +62,52 @@
         android:layout_height="wrap_content"
         android:text="Sample Text"
         android:id="@+id/textView_up_booktext"
-        android:layout_below="@+id/textView_up_booktitle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/button"
-         />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+        android:layout_below="@+id/textView_up_booktitle"
+        android:layout_above="@+id/linearLayout"
+        android:background="@color/wallet_highlighted_text_holo_light"
+        android:autoText="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/button"
+        android:id="@+id/linearLayout"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView_up_booktext"
-        android:layout_alignStart="@+id/textView_up_booktext" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="2"
+       >
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        android:id="@+id/button2"
-        android:layout_alignTop="@+id/button"
-        android:layout_alignRight="@+id/textView_up_booktext"
-        android:layout_alignEnd="@+id/textView_up_booktext" />
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:id="@+id/button_back"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/holo_blue_light" />
+
+        <Button
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/button_next"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/holo_blue_light" />
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
