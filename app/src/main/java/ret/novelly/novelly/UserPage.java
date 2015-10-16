@@ -11,51 +11,49 @@ import android.widget.TextView;
 
 public class UserPage extends Activity {
     String userID = "";
-    String pasteID="";
-    String storyID="";
-    boolean isWinner=false;
+    String pasteID = "";
+    String storyID = "";
+    boolean isWinner = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_page);
 
         Bundle extra = getIntent().getExtras();
-        Pastes paste= new Pastes();
+        Pastes paste = new Pastes();
         Story story = new Story();
         database db = new database(this);
         db.getWritableDatabase();
 
-        boolean isPaste= false;
-        boolean isStory=false;
+        boolean isPaste = false;
+        boolean isStory = false;
         userID = extra.getString("userID");
-      try {
-          if ((extra.getString("storyID") != null) && (extra.getString("pasteID") != null)) {
-              storyID = extra.getString("storyID");
-              pasteID = extra.getString("pasteID");
-              paste = db.getPaste(pasteID);
-              isPaste = true;
-          } else if(extra.getString("storyID") != null)  {
-              storyID = extra.getString("storyID");
-              story = db.getStory(storyID);
-              isStory = true;
-          }
-      }
-      catch (Exception e) {}
+        try {
+            if ((extra.getString("storyID") != null) && (extra.getString("pasteID") != null)) {
+                storyID = extra.getString("storyID");
+                pasteID = extra.getString("pasteID");
+                paste = db.getPaste(pasteID);
+                isPaste = true;
+            } else if (extra.getString("storyID") != null) {
+                storyID = extra.getString("storyID");
+                story = db.getStory(storyID);
+                isStory = true;
+            }
 
-        if(isWinner)
-        {
-
+        } catch (Exception e) {
         }
-        else{
-         CheckBox CB_winner= ((CheckBox) findViewById(R.id.checkBox_winner));
+
+        if (isWinner) {
+
+        } else {
+            CheckBox CB_winner = ((CheckBox) findViewById(R.id.checkBox_winner));
             CB_winner.setVisibility(View.INVISIBLE);
         }
-        if(isPaste) {
+        if (isPaste) {
             ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
             ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
-        }
-        else if(isStory)
-        {
+        } else if (isStory) {
             ((TextView) findViewById(R.id.textView_up_booktext)).setText(story.getUserStory());
             ((TextView) findViewById(R.id.textView_up_booktitle)).setText(story.getTitle());
         }

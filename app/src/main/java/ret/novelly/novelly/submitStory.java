@@ -67,7 +67,7 @@ public class submitStory extends Activity {
                                                      Handler mHandler = new Handler();
                                                      mHandler.postDelayed(new Runnable() {
                                                          public void run() {
-                                                             startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("pasteID",pasteID));
+                                                             startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("pasteID",pasteID).putExtra("storyID",storyID));
                                                          }
                                                      }, 1500);
 
