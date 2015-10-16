@@ -10,7 +10,7 @@ public class Story {
 
    private String title;
     private String userStory;
-    private UUID id;
+    private String id;
 
     Story()
     {
@@ -23,7 +23,7 @@ public class Story {
 
     }
 
-    void setID(UUID id){
+    void setID(String id){
         this.id=id;
 
     }
@@ -37,7 +37,7 @@ public class Story {
         userStory=s;
     }
 
-    UUID getID()
+    String getID()
     {
         return id;
     }

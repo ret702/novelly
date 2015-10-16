@@ -17,7 +17,7 @@
 
 
     <item
-        android:title="@string/Add_To_Story"
-        android:id="@+id/AddToStory"
+        android:title="@string/Add_Paste"
+        android:id="@+id/AddPaste"
         />
 </menu>

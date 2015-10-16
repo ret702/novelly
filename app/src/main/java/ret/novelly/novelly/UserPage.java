@@ -1,16 +1,42 @@
 package ret.novelly.novelly;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
-public class UserPage extends AppCompatActivity {
-
+public class UserPage extends Activity {
+    String userID = "";
+    String pasteID="";
+    String storyID="";
+    boolean isWinner=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_page);
+
+        Bundle extra = getIntent().getExtras();
+        userID = extra.getString("userID");
+        storyID= extra.getString("storyID");
+        pasteID= extra.getString("pasteID");
+        database db = new database(this);
+       Pastes paste=  db.getPaste(pasteID);
+
+
+        if(isWinner)
+        {
+
+        }
+        else{
+         CheckBox CB_winner= ((CheckBox) findViewById(R.id.checkBox_winner));
+            CB_winner.setVisibility(View.INVISIBLE);
+        }
+        ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
+        ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
     }
 
     @Override

@@ -14,4 +14,9 @@
         android:title="@string/Delete_All"
         android:id="@+id/deleteall"
         />
+
+    <item
+        android:title="@string/Delete_DB"
+        android:id="@+id/deleteDB"
+        />
 </menu>

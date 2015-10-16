@@ -1,5 +1,6 @@
 package ret.novelly.novelly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.UUID;
 
-public class ViewStoryClass extends AppCompatActivity {
+public class ViewStoryClass extends Activity {
     private String storyID;
      String userID;
     @Override
@@ -54,7 +55,7 @@ public class ViewStoryClass extends AppCompatActivity {
             intent.putExtra("storyID", storyID);
             startActivity(intent);
         }
-        else if (id== R.id.AddToStory)
+        else if (id== R.id.AddPaste)
         {
 
             Intent intent = new Intent(ViewStoryClass.this, submitStory.class );
