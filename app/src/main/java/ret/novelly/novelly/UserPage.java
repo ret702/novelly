@@ -20,12 +20,27 @@ public class UserPage extends Activity {
         setContentView(R.layout.activity_user_page);
 
         Bundle extra = getIntent().getExtras();
-        userID = extra.getString("userID");
-        storyID= extra.getString("storyID");
-        pasteID= extra.getString("pasteID");
+        Pastes paste= new Pastes();
+        Story story = new Story();
         database db = new database(this);
-       Pastes paste=  db.getPaste(pasteID);
+        db.getWritableDatabase();
 
+        boolean isPaste= false;
+        boolean isStory=false;
+        userID = extra.getString("userID");
+      try {
+          if ((extra.getString("storyID") != null) && (extra.getString("pasteID") != null)) {
+              storyID = extra.getString("storyID");
+              pasteID = extra.getString("pasteID");
+              paste = db.getPaste(pasteID);
+              isPaste = true;
+          } else if(extra.getString("storyID") != null)  {
+              storyID = extra.getString("storyID");
+              story = db.getStory(storyID);
+              isStory = true;
+          }
+      }
+      catch (Exception e) {}
 
         if(isWinner)
         {
@@ -35,8 +50,15 @@ public class UserPage extends Activity {
          CheckBox CB_winner= ((CheckBox) findViewById(R.id.checkBox_winner));
             CB_winner.setVisibility(View.INVISIBLE);
         }
-        ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
-        ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
+        if(isPaste) {
+            ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
+            ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
+        }
+        else if(isStory)
+        {
+            ((TextView) findViewById(R.id.textView_up_booktext)).setText(story.getUserStory());
+            ((TextView) findViewById(R.id.textView_up_booktitle)).setText(story.getTitle());
+        }
     }
 
     @Override

@@ -23,7 +23,7 @@ public class ViewStoryClass extends Activity {
         db.getWritableDatabase();
         storyID= extra.getString("storyID");
          userID = extra.getString("userID");
-        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(UUID.fromString(storyID)).getUserStory());
+        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(storyID).getUserStory());
 
     }
 

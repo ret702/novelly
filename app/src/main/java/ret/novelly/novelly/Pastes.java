@@ -33,6 +33,7 @@ public class Pastes {
     {
         return userID;
     }
+
     void setID(String pasteID, String storyID){
         this.pasteID=pasteID;
         this.storyID = storyID;

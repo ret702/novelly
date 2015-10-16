@@ -30,14 +30,20 @@ public class submitStory extends Activity {
         Bundle extra = getIntent().getExtras();
         final String userID = extra.getString("userID");
         try {
-            storyID = extra.getString("storyID");
-            isPaste = true;
-            pasteID = UUID.randomUUID().toString();
+            //TODO: Convert to extra.containsKey()
+            if(extra.getString("storyID")!=null) {
+                storyID = extra.getString("storyID");
+                isPaste = true;
+                pasteID = UUID.randomUUID().toString();
+            }
+            else{
+                isPaste = false;
+                storyID = UUID.randomUUID().toString();
+            }
 
         } catch (Exception e) {
             if (e.getClass() == NullPointerException.class) {
-                isPaste = false;
-                String storyID = UUID.randomUUID().toString();
+                Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT);
             }
         }
 

@@ -37,7 +37,7 @@ public class database extends SQLiteOpenHelper {
                 "story TEXT )";
         db.execSQL(CREATE_Story_TABLE);
 
-        String Create_Paste_Table = "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT, pasteTitle TEXT)";
+        String Create_Paste_Table = "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT, title TEXT)";
         db.execSQL(Create_Paste_Table);
 
     }
@@ -75,7 +75,7 @@ public class database extends SQLiteOpenHelper {
     private static final String KEY_USERID = "userID";
 
     private static final String[] COLUMNS_Story = {KEY_ID, KEY_TITLE, KEY_STORY, KEY_STORYID};
-    private static final String[] COLUMNS_Paste = {KEY_ID, KEY_TITLE, KEY_STORYID, KEY_PASTEID,KEY_PASTE};
+    private static final String[] COLUMNS_Paste = { KEY_TITLE, KEY_STORYID, KEY_PASTEID,KEY_PASTE, KEY_USERID};
 
     public void addStory(Story Story) {
         // 1. get reference to writable DB
@@ -85,7 +85,7 @@ public class database extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, Story.getTitle()); // get title
         values.put(KEY_STORY, Story.getUserStory()); // get story
-        values.put(KEY_STORYID, UUID.randomUUID().toString());
+        values.put(KEY_STORYID,Story.getID());
 
         // 3. insert
         db.insert(TABLE_StoryS, // table
@@ -95,7 +95,7 @@ public class database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Story getStory(UUID storyID) {
+    public Story getStory(String storyID) {
 
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
@@ -180,7 +180,7 @@ public class database extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex("pasteID")));
                 paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
                 paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
-                paste.setTitle("pasteTitle");
+                paste.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 pastes.add(paste);
             } while (cursor.moveToNext());
         }
@@ -219,11 +219,11 @@ public class database extends SQLiteOpenHelper {
     public void addPaste(String storyID, String pasteID, String userID, String paste, String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        values.put("storyID", storyID.toString());
-        values.put("pasteID", pasteID.toString());
-        values.put("userID", userID.toString());
+        values.put("storyID", storyID);
+        values.put("pasteID", pasteID);
+        values.put("userID", userID);
         values.put("paste", paste);
-        values.put("pasteTitle", title);
+        values.put("title", title);
 
         db.insert(TABLE_Pastes, // table
                 null, //nullColumnHack
