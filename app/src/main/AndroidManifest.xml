@@ -4,7 +4,7 @@
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
  To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
      option is required to comply with the Google+ Sign-In developer policies
@@ -18,7 +18,9 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@drawable/front"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name=".appClass"
+        >
         <activity
             android:name=".login"
             android:label="@string/app_name" >

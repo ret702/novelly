@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +26,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Bundle extra = getIntent().getExtras();
         userID = extra.getString("userID");
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
 
 
         final ListView userStories = (ListView) findViewById(R.id.mainlistview);
