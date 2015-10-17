@@ -155,12 +155,6 @@ import java.net.InetAddress;
 
 
 
-
-
-
-
-
-
     /**
      * Returns the time computed from the NTP transaction.
      *

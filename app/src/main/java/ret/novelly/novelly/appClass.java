@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -16,7 +17,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class appClass extends Application {
 
@@ -27,13 +31,16 @@ public class appClass extends Application {
        //Async Stuff
         SntpClient.GetNTPAsynctask ntpInstance = new SntpClient.GetNTPAsynctask();
         String result="";
-        Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
         try {
             result = ntpInstance.execute().get();
         } catch (Exception e) {
 
         }
-        Date currentTime = new Date(Long.parseLong(result) * 1000);
+
+        Calendar date =  Calendar.getInstance();
+        int timeZoneOffset= 25200000;
+        date.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        date.setTimeInMillis(Long.parseLong(result)- (timeZoneOffset));
 
 
 
@@ -41,6 +48,7 @@ public class appClass extends Application {
         //Parse Stuff
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
         ParseObject parseTime = new ParseObject("time");
 
 
