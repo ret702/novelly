@@ -21,9 +21,27 @@ public class ViewStoryClass extends Activity {
         Bundle extra =getIntent().getExtras();
         database db = new database(getApplicationContext());
         db.getWritableDatabase();
-        storyID= extra.getString("storyID");
-         userID = extra.getString("userID");
-        ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(storyID).getUserStory());
+        userID = appClass.userID;
+        String pasteID;
+        Pastes paste;
+
+        try {
+            if ( extra.getString("pasteID") != null) {
+
+                pasteID = extra.getString("pasteID");
+                paste = db.getPaste(pasteID);
+                ((TextView)findViewById(R.id.viewuserstory)).setText(db.getPaste(pasteID).getUserPaste());
+
+            } else if (extra.getString("storyID") != null) {
+                storyID= extra.getString("storyID");
+                ((TextView)findViewById(R.id.viewuserstory)).setText(db.getStory(storyID).getUserStory());
+            }
+
+        } catch (Exception e) {
+        }
+
+
+
 
     }
 

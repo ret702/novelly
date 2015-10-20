@@ -92,7 +92,6 @@ public class login extends Activity implements
        Toast.makeText(getApplicationContext(),"Signed in!", Toast.LENGTH_LONG);
         //TODO:Create application class to store global userID
         Intent intent = new Intent(login.this,MainActivity.class);
-        intent.putExtra("userID", UUID.randomUUID().toString());
         startActivity(intent);
     }
 

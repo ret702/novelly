@@ -25,11 +25,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bundle extra = getIntent().getExtras();
-        userID = extra.getString("userID");
+        userID = appClass.userID;
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
 
 
         final ListView userStories = (ListView) findViewById(R.id.mainlistview);

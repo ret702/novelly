@@ -15,5 +15,6 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_view_pastes">ViewPastes</string>
     <string name="Delete_DB">Delete DB</string>
+    <string name="title_activity_read">Read</string>
 
 </resources>

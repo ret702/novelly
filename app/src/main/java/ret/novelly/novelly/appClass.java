@@ -21,26 +21,32 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class appClass extends Application {
+    protected static String userID = UUID.randomUUID().toString();
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-       //Async Stuff
-        SntpClient.GetNTPAsynctask ntpInstance = new SntpClient.GetNTPAsynctask();
-        String result="";
-        try {
-            result = ntpInstance.execute().get();
-        } catch (Exception e) {
 
-        }
 
-        Calendar date =  Calendar.getInstance();
-        int timeZoneOffset= 25200000;
-        date.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-        date.setTimeInMillis(Long.parseLong(result)- (timeZoneOffset));
+// Might use might not, idk
+//
+//        //Async Stuff
+//        String result="";
+//        SntpClient.GetNTPAsynctask ntpInstance = new SntpClient.GetNTPAsynctask();
+//        try {
+//            result = ntpInstance.execute().get();
+//        } catch (Exception e) {
+//
+//        }
+//        //get epoch time
+//        Calendar date =  Calendar.getInstance();
+//        int timeZoneOffset= 25200000;
+//        date.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+//        date.setTimeInMillis(Long.parseLong(result) - (timeZoneOffset));
 
 
 
@@ -50,6 +56,8 @@ public class appClass extends Application {
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
         ParseObject parseTime = new ParseObject("time");
+        parseTime.put("test","test");
+        parseTime.saveInBackground();
 
 
 
