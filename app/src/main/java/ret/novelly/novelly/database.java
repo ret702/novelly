@@ -8,8 +8,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.ViewParent;
+
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +84,7 @@ public class database extends SQLiteOpenHelper {
     private static final String KEY_USERID = "userID";
 
     private static final String[] COLUMNS_Story = {KEY_ID, KEY_TITLE, KEY_STORY, KEY_STORYID};
-    private static final String[] COLUMNS_Paste = { KEY_TITLE, KEY_STORYID, KEY_PASTEID,KEY_PASTE, KEY_USERID};
+    private static final String[] COLUMNS_Paste = {KEY_TITLE, KEY_STORYID, KEY_PASTEID, KEY_PASTE, KEY_USERID};
 
     public void addStory(Story Story) {
         // 1. get reference to writable DB
@@ -85,7 +94,7 @@ public class database extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, Story.getTitle()); // get title
         values.put(KEY_STORY, Story.getUserStory()); // get story
-        values.put(KEY_STORYID,Story.getID());
+        values.put(KEY_STORYID, Story.getID());
 
         // 3. insert
         db.insert(TABLE_StoryS, // table
@@ -122,7 +131,7 @@ public class database extends SQLiteOpenHelper {
         Story.setUserStory(cursor.getString(cursor.getColumnIndex("story")));
 
 
-        Log.d("getStory(" + storyID + ")", Story.toString());
+        cursor.close();
         db.close();
         // 5. return Story
         return Story;
@@ -154,43 +163,58 @@ public class database extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getAllStorys()", Storys.toString());
+
+        cursor.close();
         db.close();
         // return Storys
         return Storys;
     }
 
 
-    public List<Pastes> getAllPastes() {
-        List<Pastes> pastes = new LinkedList<Pastes>();
-        Pastes paste = new Pastes();
-        // 1. build the query
-        String query = "SELECT  * FROM " + TABLE_Pastes;
+    public List<Pastes> getAllPastes(String storyID) {
 
-        // 2. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        final Pastes paste = new Pastes();
+        List<ParseObject> parseObjects = new ArrayList<ParseObject>();
+        List<Pastes> pastes = new ArrayList<Pastes>();
 
-        // 3. go over each row, build Story and add it to list
-        Story Story = null;
-        if (cursor.moveToFirst()) {
-            do {
 
-                paste.setID(cursor.getString(cursor.getColumnIndex("storyID")),
-                        cursor.getString(cursor.getColumnIndex("pasteID")));
-                paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
-                paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
-                paste.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pastes");
+        query.whereEqualTo("storyID", storyID);
+        try {
+            parseObjects = query.find();
+            for (int i = 0; i < parseObjects.size(); i++) {
+                paste.setID((parseObjects.get(i).getString("pasteID")),
+                        parseObjects.get(i).getString("storyID"));
+                paste.setUserID(parseObjects.get(i).getString("userID"));
+                paste.setUserPaste(parseObjects.get(i).getString("paste"));
+                paste.setTitle(parseObjects.get(i).getString("title"));
                 pastes.add(paste);
-            } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
         }
 
 
-        db.close();
         // return pastes
         return pastes;
     }
 
+
+    protected void addVote(String pasteID, String storyID, String userID) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
+        query.whereEqualTo("storyID", storyID);
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> object, ParseException e) {
+                if (e == null) {
+                    // Now let's update it with some new data. In this case, only cheatMode and score
+                    // will get sent to the Parse Cloud. playerName hasn't changed.
+//                    object.put("votes", object.getInt("votes") + 1);
+//
+//                    object.saveInBackground();
+                }
+            }
+        });
+    }
 
     // Updating single Story
     public int updateStory(Story Story) {
@@ -217,56 +241,41 @@ public class database extends SQLiteOpenHelper {
     }
 
     public void addPaste(String storyID, String pasteID, String userID, String paste, String title) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("storyID", storyID);
-        values.put("pasteID", pasteID);
-        values.put("userID", userID);
-        values.put("paste", paste);
-        values.put("title", title);
+        ParseObject pastes = new ParseObject("Pastes");
 
-        db.insert(TABLE_Pastes, // table
-                null, //nullColumnHack
-                values); // key/value -> keys = column names/ values = column values
-
-        db.close();
+        pastes.put("storyID", storyID);
+        pastes.put("pasteID", pasteID);
+        pastes.put("userID", userID);
+        pastes.put("paste", paste);
+        pastes.put("title", title);
+        pastes.saveInBackground();
     }
-
 
 
     public Pastes getPaste(String pasteID) {
 
-        // 1. get reference to readable DB
-        SQLiteDatabase db = this.getReadableDatabase();
+        final Pastes pastes = new Pastes();
 
-        // 2. build query
-        Cursor cursor =
-                db.query(TABLE_Pastes, // a. table
-                        COLUMNS_Paste, // b. column names
-                        " pasteID = ?", // c. selections
-                        new String[]{String.valueOf(pasteID)}, // d. selections args
-                        null, // e. group by
-                        null, // f. having
-                        null, // g. order by
-                        null); // h. limit
 
-        // 3. if we got results get the first one
-        if (cursor != null)
-            cursor.moveToFirst();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Pastes");
+        query.whereEqualTo("pasteID", pasteID);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    pastes.setUserID(object.getString("userID"));
+                    pastes.setID(object.getString("pasteID"), object.getString("storyID"));
+                    pastes.setUserPaste(object.getString("paste"));
+                    pastes.setTitle(object.getString("title"));
 
-        // 4. build Story object
-        Pastes paste  = new Pastes();
-        paste.setID(cursor.getString(cursor.getColumnIndex("pasteID")), cursor.getString(cursor.getColumnIndex("storyID")));
-        paste.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        paste.setUserPaste(cursor.getString(cursor.getColumnIndex("paste")));
-        paste.setUserID(cursor.getString(cursor.getColumnIndex("userID")));
+                } else {
 
-        db.close();
-        // 5. return Story
-        return paste;
+                }
+            }
+        });
+
+
+        return pastes;
     }
-
-
 
 
     void deleteTable(String table) {
@@ -304,10 +313,11 @@ public class database extends SQLiteOpenHelper {
 
     @TargetApi(18)
     public void deleteDB(Context context) {
-     context.deleteDatabase("Novelly.db");
+        context.deleteDatabase("Novelly.db");
     }
 
     public boolean isEmpty(String table) {
+
         boolean empty = true;
         // 1. build the query
         String query = "SELECT  * FROM " + table;
@@ -322,12 +332,15 @@ public class database extends SQLiteOpenHelper {
             } else {
                 empty = false;
             }
+            cursor.close();
 
         } catch (Exception e) {
 
         }
 
+
         // 3. go over each row, build Story and add it to list
+
         db.close();
 
         return empty;

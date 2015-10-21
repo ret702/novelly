@@ -55,9 +55,7 @@ public class appClass extends Application {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
-        ParseObject parseTime = new ParseObject("time");
-        parseTime.put("test","test");
-        parseTime.saveInBackground();
+
 
 
 

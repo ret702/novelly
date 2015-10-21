@@ -21,14 +21,14 @@ public class submitStory extends Activity {
     private String storyID;
     private boolean isPaste;
     private String pasteID;
+    final String userID = appClass.userID;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submittory);
 
         Bundle extra = getIntent().getExtras();
-        final String userID = extra.getString("userID");
+
         try {
             //TODO: Convert to extra.containsKey()
             if(extra.getString("storyID")!=null) {
@@ -60,17 +60,9 @@ public class submitStory extends Activity {
                                             String title= ((EditText) findViewById(R.id.editText_Title)).getText().toString();
                                              if (isPaste) {
                                                  if (!(title.length()==0)) {
-                                                     db.addPaste(storyID, pasteID, userID, userText,title);
-
-                                                     Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
-
-                                                     Handler mHandler = new Handler();
-                                                     mHandler.postDelayed(new Runnable() {
-                                                         public void run() {
-                                                             startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("pasteID",pasteID).putExtra("storyID",storyID));
-                                                         }
-                                                     }, 1500);
-
+                                                     //db.addPaste(storyID, pasteID, userID, userText, title);
+                                                    // pasteNavigate(pasteID,storyID);
+                                                     db.addtest(storyID,pasteID,userID,userText,title);
                                                  }
                                                  else
                                                  {
@@ -86,7 +78,8 @@ public class submitStory extends Activity {
                                                      story.setTitle(((EditText) findViewById(R.id.editText_Title)).getText().toString());
                                                      db.addStory(story);
                                                      db.close();
-                                                     startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("storyID",storyID));
+                                                     storyNavigate(storyID);
+
                                                  }
                                                  else
                                                  {
@@ -97,6 +90,35 @@ public class submitStory extends Activity {
                                      }
 
         );
+    }
+
+    protected void pasteNavigate(final String pasteid, String storyid )
+    {
+
+        Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
+
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("pasteID", pasteid).putExtra("storyID", storyID));
+            }
+        }, 1500);
+    }
+
+
+    protected void storyNavigate(String storyid )
+    {
+
+        Toast.makeText(submitStory.this, "Story Submitted!", Toast.LENGTH_LONG).show();
+
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("storyID", storyID));
+            }
+        }, 1500);
+
+
     }
 
 

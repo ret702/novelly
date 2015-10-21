@@ -34,9 +34,9 @@ public class Pastes {
         return userID;
     }
 
-    void setID(String pasteID, String storyID){
-        this.pasteID=pasteID;
-        this.storyID = storyID;
+    void setID(String pasteid, String storyid){
+        this.pasteID=pasteid;
+        this.storyID = storyid;
 
     }
     void setTitle(String t)
