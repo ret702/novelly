@@ -20,8 +20,10 @@ public class submitStory extends Activity {
 
     private String storyID;
     private boolean isPaste;
+    private boolean isStory;
     private String pasteID;
     final String userID = appClass.userID;
+    String userText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,90 +33,64 @@ public class submitStory extends Activity {
 
         try {
             //TODO: Convert to extra.containsKey()
-            if(extra.getString("storyID")!=null) {
+            if (extra.getString("storyID") != null) {
                 storyID = extra.getString("storyID");
                 isPaste = true;
-                pasteID = UUID.randomUUID().toString();
-            }
-            else{
+                isStory=false;
+            } else {
                 isPaste = false;
-                storyID = UUID.randomUUID().toString();
+                isStory=true;
             }
 
         } catch (Exception e) {
             if (e.getClass() == NullPointerException.class) {
-                Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT);
             }
         }
 
-
-        final database db = new database(getApplicationContext());
-        db.getWritableDatabase();
 
         Button subButton = (Button) findViewById(R.id.button_submitstory);
         subButton.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             String userText;
+                                             database db = new database(getApplicationContext());
+                                             db.getWritableDatabase();
+                                             //get story/paste
                                              userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
-                                            String title= ((EditText) findViewById(R.id.editText_Title)).getText().toString();
+                                             //get title
+                                             String title = ((EditText) findViewById(R.id.editText_Title)).getText().toString();
                                              if (isPaste) {
-                                                 if (!(title.length()==0)) {
-                                                     //db.addPaste(storyID, pasteID, userID, userText, title);
-                                                    // pasteNavigate(pasteID,storyID);
-                                                     db.addtest(storyID,pasteID,userID,userText,title);
-                                                 }
-                                                 else
-                                                 {
+                                                 if (!(title.length() == 0)) {
+                                                     Pastes paste = new Pastes(UUID.randomUUID().toString(),storyID,userID,userText,title);
+                                                     db.addPaste(paste);
+                                                     storyNavigate(pasteID, pasteID);
+                                                 } else {
                                                      Toast.makeText(submitStory.this, "Please Enter A Title", Toast.LENGTH_SHORT).show();
                                                  }
-                                             }
-                                             else
-                                             {
-                                                 if (!(title.length()==0)) {
-                                                     Story story = new Story();
-                                                     story.setUserStory(userText);
-                                                     story.setID(storyID);
-                                                     story.setTitle(((EditText) findViewById(R.id.editText_Title)).getText().toString());
+                                             } else if(isStory) {
+                                                 //if title not empty
+                                                 //TODO: add textview validation i.e !=empty
+                                                 if (!(title.length() == 0)) {
+                                                     Story story = new Story(UUID.randomUUID().toString(),userID,userText,title);
                                                      db.addStory(story);
-                                                     db.close();
-                                                     storyNavigate(storyID);
-
-                                                 }
-                                                 else
-                                                 {
+                                                     storyNavigate(storyID, storyID);
+                                                 } else {
                                                      Toast.makeText(submitStory.this, "Please Enter A Title", Toast.LENGTH_SHORT).show();
                                                  }
                                              }
                                          }
                                      }
-
         );
     }
 
-    protected void pasteNavigate(final String pasteid, String storyid )
-    {
-
-        Toast.makeText(submitStory.this, "Paste Submitted!", Toast.LENGTH_LONG).show();
-
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            public void run() {
-                startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("pasteID", pasteid).putExtra("storyID", storyID));
-            }
-        }, 1500);
-    }
-
-
-    protected void storyNavigate(String storyid )
-    {
+    protected void storyNavigate(final String column, final String ID) {
 
         Toast.makeText(submitStory.this, "Story Submitted!", Toast.LENGTH_LONG).show();
 
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             public void run() {
-                startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra("storyID", storyID));
+                startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra(column, ID));
             }
         }, 1500);
 

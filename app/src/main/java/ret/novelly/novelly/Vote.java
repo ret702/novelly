@@ -1,29 +1,27 @@
 package ret.novelly.novelly;
 
+
 import java.util.UUID;
 
-/**
- * Created by ret70 on 10/13/2015.
- */
-public class Pastes {
+public class Vote {
 
     private String title;
     private String paste;
     private String pasteID;
     private String storyID;
     private String userID;
+    private String voteID;
 
 
-    Pastes() {
+    Vote() {
 
     }
 
-    Pastes(String pasteID, String storyID,String userID,String paste,String title) {
-        this.pasteID=pasteID;
-        this.storyID=storyID;
-        this.userID=userID;
+    Vote(String pasteID, String storyID, String userID) {
         this.title = title;
         this.paste = paste;
+        this.userID = userID;
+        voteID= UUID.randomUUID().toString();
 
     }
 
@@ -36,18 +34,18 @@ public class Pastes {
         return userID;
     }
 
-    void setID(String pasteid) {
-        this.pasteID = pasteid;
+    void setID(String id) {
+        this.voteID = voteID;
     }
 
     void setTitle(String t) {
         title = t;
     }
 
-    void setStoryID(String s)
-    {
-        storyID=s;
+    void setStoryID(String s) {
+        storyID = s;
     }
+
     void setUserPaste(String s) {
         paste = s;
     }
@@ -57,11 +55,15 @@ public class Pastes {
     }
 
     String getID() {
-        return pasteID;
+        return voteID;
     }
 
     String getTitle() {
         return title;
+    }
+
+    String getPasteID() {
+        return pasteID;
     }
 
     String getUserPaste() {

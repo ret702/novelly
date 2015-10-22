@@ -27,41 +27,34 @@ public class ViewPastes extends Activity {
         final database db = new database(getApplicationContext());
         Bundle extra = getIntent().getExtras();
         final String storyID = extra.getString("storyID");
-        final String userID =appClass.userID;
+        final String userID = appClass.userID;
         ArrayList<String> item = new ArrayList<String>();
         final HashMap pasteID = new HashMap();
         final ArrayAdapter<String> adaptor;
         db.getWritableDatabase();
 
 
-
-        if (db.isEmpty("Pastes") != true) {
-
-            List<Pastes> pasteArr= db.getAllPastes(storyID);
-            int numOfPaste=pasteArr.size();
-            for (int i = 0; i < numOfPaste; i++) {
-                item.add(pasteArr.iterator().next().getTitle());
-                pasteID.put(Integer.toString(item.size()), pasteArr.iterator().next().getID());
-            }
-
-            adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
-            pastes.setAdapter(adaptor);
-            pastes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    int offset = 1;
-                    Intent gotoStory = new Intent(ViewPastes.this, ViewStoryClass.class);
-
-                    if (db.isEmpty("Pastes") != true) {
-                        gotoStory.putExtra("pasteID", (pasteID.get(Integer.toString(position + offset))).toString());
-                        gotoStory.putExtra("storyID",storyID);
-                    }
-                    startActivity(gotoStory);
-                }
-            });
+        List<Pastes> pasteArr = db.getAllPastes(storyID);
+        int numOfPaste = pasteArr.size();
+        for (int i = 0; i < numOfPaste; i++) {
+            item.add(pasteArr.get(i).getTitle());
+            pasteID.put(Integer.toString(item.size()), pasteArr.iterator().next().getID());
         }
 
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
+        pastes.setAdapter(adaptor);
+        pastes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int offset = 1;
+                Intent gotoStory = new Intent(ViewPastes.this, ViewStoryClass.class);
+                gotoStory.putExtra("pasteID", (pasteID.get(Integer.toString(position + offset))).toString());
+                gotoStory.putExtra("storyID", storyID);
+                startActivity(gotoStory);
+            }
+        });
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

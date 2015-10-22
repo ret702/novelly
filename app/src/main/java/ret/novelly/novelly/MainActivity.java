@@ -24,43 +24,41 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Bundle extra = getIntent().getExtras();
         userID = appClass.userID;
-
-
-
         final ListView userStories = (ListView) findViewById(R.id.mainlistview);
-
         ArrayList<String> item = new ArrayList<String>();
         final HashMap storyIDs = new HashMap();
         final ArrayAdapter<String> adaptor;
         final database db = new database(getApplicationContext());
-
         db.getWritableDatabase();
 
-        if (db.isEmpty("Storys") != true) {
-            for (int i = 0; i < db.getAllStorys().size(); i++) {
-                item.add(db.getAllStorys().get(i).getTitle());
-                storyIDs.put(Integer.toString(item.size()), db.getAllStorys().get(i).getID());
-            }
-            adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
-
-            userStories.setAdapter(adaptor);
-            userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    int offset = 1;
-                    Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-
-                    if (db.isEmpty("Storys") != true) {
-                        gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position + offset))).toString());
-                        gotoStory.putExtra("userID", userID);
-                    }
-                    startActivity(gotoStory);
-                }
-            });
+        for (int i = 0; i < db.getAllStorys().size(); i++) {
+            item.add(db.getAllStorys().get(i).getTitle());
+            storyIDs.put(Integer.toString(item.size()), db.getAllStorys().get(i).getID());
         }
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
 
+        userStories.setAdapter(adaptor);
+        userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int offset = 1;
+                Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
+                gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position + offset))).toString());
+                gotoStory.putExtra("userID", userID);
+                startActivity(gotoStory);
+            }
+        });
+
+    }
+
+
+    public void onResume()
+    {
+        super.onResume();
+        recreate();
     }
 
     @Override

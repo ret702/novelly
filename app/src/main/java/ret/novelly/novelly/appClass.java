@@ -24,7 +24,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 public class appClass extends Application {
-    protected static String userID = UUID.randomUUID().toString();
+    protected static String userID = "4f1b3acd-23a7-44fb-9b77-1bce8bd4336d";
 
     @Override
     public void onCreate() {
@@ -52,8 +52,6 @@ public class appClass extends Application {
 
 
         //Parse Stuff
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
         Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
 
 

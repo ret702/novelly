@@ -8,45 +8,54 @@ import java.util.UUID;
  */
 public class Story {
 
-   private String title;
+    private String title;
     private String userStory;
-    private String id;
+    private String storyID;
+    private String userID;
 
-    Story()
-    {
-
-    }
-    Story(String title, String userStory)
-    {
-        this.title= title;
-        this.userStory=userStory;
+    Story() {
 
     }
 
-    void setID(String id){
-        this.id=id;
+    Story( String storyID,String userID,String story,String title) {
 
-    }
-    void setTitle(String t)
-    {
-        title=t;
-    }
-
-    void setUserStory(String s)
-    {
-        userStory=s;
+        this.storyID=storyID;
+        this.userID=userID;
+        this.title = title;
+        this.userStory = story;
     }
 
-    String getID()
-    {
-        return id;
+
+    void setID(String id) {
+        this.storyID = id;
     }
-    String getTitle()
-    {
+
+    void setTitle(String t) {
+        title = t;
+    }
+
+    void setUserID(String id) {
+        this.userID = id;
+    }
+
+    void setUserStory(String s) {
+        userStory = s;
+    }
+
+
+    String getUserID() {
+        return userID;
+    }
+
+    String getID() {
+        return storyID;
+    }
+
+    String getTitle() {
         return title;
     }
-    String getUserStory()
-    {
+
+    String getUserStory() {
         return userStory;
     }
 }

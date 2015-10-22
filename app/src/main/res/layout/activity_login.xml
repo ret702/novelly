@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ret.novelly.novelly.login">
+    tools:context="ret.novelly.novelly.login"
+    android:background="@drawable/actionbar">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
@@ -10,17 +11,6 @@
         android:layout_marginBottom="41dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView_titleImage"
-        android:src="@drawable/logo"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/sign_in_button"
-        android:layout_below="@+id/textView_titlePage"
-        android:scaleType="center" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,6 +24,8 @@
         android:layout_alignParentEnd="true"
         android:textIsSelectable="false"
         android:textSize="30sp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:textStyle="bold" />
 
 </RelativeLayout>

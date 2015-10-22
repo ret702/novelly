@@ -8,22 +8,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.ViewParent;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 public class database extends SQLiteOpenHelper {
+    //whether the user has choosen a paste in the same story before
+    boolean hasChoosenPrev;
 
     // Database Version
     private static final int DATABASE_VERSION = 2;
@@ -86,134 +85,154 @@ public class database extends SQLiteOpenHelper {
     private static final String[] COLUMNS_Story = {KEY_ID, KEY_TITLE, KEY_STORY, KEY_STORYID};
     private static final String[] COLUMNS_Paste = {KEY_TITLE, KEY_STORYID, KEY_PASTEID, KEY_PASTE, KEY_USERID};
 
-    public void addStory(Story Story) {
-        // 1. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void addStory(Story story) {
+        ParseObject Stories = new ParseObject("Stories");
 
-        // 2. create ContentValues to add key "column"/value
-        ContentValues values = new ContentValues();
-        values.put(KEY_TITLE, Story.getTitle()); // get title
-        values.put(KEY_STORY, Story.getUserStory()); // get story
-        values.put(KEY_STORYID, Story.getID());
-
-        // 3. insert
-        db.insert(TABLE_StoryS, // table
-                null, //nullColumnHack
-                values); // key/value -> keys = column names/ values = column values
-        // 4. close
-        db.close();
+        Stories.put("storyID", story.getID());
+        Stories.put("userID", story.getUserID());
+        Stories.put("story", story.getUserStory());
+        Stories.put("title", story.getTitle());
+        Stories.saveInBackground();
     }
 
     public Story getStory(String storyID) {
 
-        // 1. get reference to readable DB
-        SQLiteDatabase db = this.getReadableDatabase();
+        final Story story= new Story();
 
-        // 2. build query
-        Cursor cursor =
-                db.query(TABLE_StoryS, // a. table
-                        COLUMNS_Story, // b. column names
-                        " storyID = ?", // c. selections
-                        new String[]{String.valueOf(storyID)}, // d. selections args
-                        null, // e. group by
-                        null, // f. having
-                        null, // g. order by
-                        null); // h. limit
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
+        query.whereEqualTo("storyID", storyID);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
 
-        // 3. if we got results get the first one
-        if (cursor != null)
-            cursor.moveToFirst();
+                    story.setUserID(object.getString("userID"));
+                    story.setID(object.getString("storyID"));
+                    story.setUserStory(object.getString("story"));
+                    story.setTitle(object.getString("title"));
 
-        // 4. build Story object
-        Story Story = new Story();
-        Story.setID(cursor.getString(cursor.getColumnIndex("storyID")));
-        Story.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        Story.setUserStory(cursor.getString(cursor.getColumnIndex("story")));
+                } else {
 
+                }
+            }
+        });
 
-        cursor.close();
-        db.close();
-        // 5. return Story
-        return Story;
+        return story;
     }
 
     // Get All Storys
     public List<Story> getAllStorys() {
-        List<Story> Storys = new LinkedList<Story>();
 
-        // 1. build the query
-        String query = "SELECT  * FROM " + TABLE_StoryS;
+        ArrayList<Story> stories = new ArrayList<Story>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
+        //parse objects
+        List<ParseObject> parseObbs = new ArrayList<ParseObject>();
 
-        // 2. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        try {
+            parseObbs = query.find();
+            for (ParseObject object : parseObbs) {
+                Story pasteObb = new Story();
+                pasteObb.setID(object.getString("storyID"));
+                pasteObb.setUserID(object.getString("userID"));
+                pasteObb.setUserStory(object.getString("story"));
+                pasteObb.setTitle(object.getString("title"));
+                stories.add(pasteObb);
+            }
 
-        // 3. go over each row, build Story and add it to list
-        Story Story = null;
-        if (cursor.moveToFirst()) {
-            do {
-                Story = new Story();
-                Story.setID(cursor.getString(cursor.getColumnIndex("storyID")));
-                Story.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                Story.setUserStory(cursor.getString(cursor.getColumnIndex("story")));
-
-
-                // Add Story to Storys
-                Storys.add(Story);
-            } while (cursor.moveToNext());
+        } catch (Exception e) {
+            Log.v("error", e.getMessage());
         }
 
-
-        cursor.close();
-        db.close();
-        // return Storys
-        return Storys;
+        // return pastes
+        return stories;
     }
 
 
     public List<Pastes> getAllPastes(String storyID) {
 
-        final Pastes paste = new Pastes();
-        List<ParseObject> parseObjects = new ArrayList<ParseObject>();
-        List<Pastes> pastes = new ArrayList<Pastes>();
-
-
+        ArrayList<Pastes> pastes = new ArrayList<Pastes>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Pastes");
+        List<ParseObject> parseObbs = new ArrayList<ParseObject>();
+
         query.whereEqualTo("storyID", storyID);
         try {
-            parseObjects = query.find();
-            for (int i = 0; i < parseObjects.size(); i++) {
-                paste.setID((parseObjects.get(i).getString("pasteID")),
-                        parseObjects.get(i).getString("storyID"));
-                paste.setUserID(parseObjects.get(i).getString("userID"));
-                paste.setUserPaste(parseObjects.get(i).getString("paste"));
-                paste.setTitle(parseObjects.get(i).getString("title"));
-                pastes.add(paste);
+            parseObbs = query.find();
+            for (ParseObject object : parseObbs) {
+                Pastes pasteObb = new Pastes();
+                pasteObb.setID(object.getString("pasteID"));
+                pasteObb.setUserID(object.getString("userID"));
+                pasteObb.setUserPaste(object.getString("paste"));
+                pasteObb.setTitle(object.getString("title"));
+                pastes.add(pasteObb);
             }
-        } catch (Exception e) {
-        }
 
+        } catch (Exception e) {
+            Log.v("error", e.getMessage());
+        }
 
         // return pastes
         return pastes;
     }
 
 
-    protected void addVote(String pasteID, String storyID, String userID) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
-        query.whereEqualTo("storyID", storyID);
+    protected boolean validatePaste(Vote vote) {
 
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> object, ParseException e) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
+        query.whereEqualTo("storyID", vote.getStoryID());
+        query.whereEqualTo("userID",vote.getUserID());
+
+        List<ParseObject> test = new ArrayList<ParseObject>();
+
+        try {
+            test = query.find();
+        } catch (ParseException e) {
+
+        } finally {
+            if (test == null) {
+                hasChoosenPrev = false;
+            } else {
+                hasChoosenPrev = true;
+            }
+        }
+
+
+        return hasChoosenPrev;
+    }
+
+    protected void addVote(final Vote vote) {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
+        query.whereEqualTo("storyID", vote.getStoryID());
+        query.whereEqualTo("userID", vote.getUserID());
+        //add to votes class
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    // Now let's update it with some new data. In this case, only cheatMode and score
-                    // will get sent to the Parse Cloud. playerName hasn't changed.
-//                    object.put("votes", object.getInt("votes") + 1);
-//
-//                    object.saveInBackground();
+                    //user has already chosen a paste for story
+
+                } else {
+                    ParseObject voteClass = new ParseObject("Votes");
+                    voteClass.put("pasteID", vote.getPasteID());
+                    voteClass.put("storyID", vote.getStoryID());
+                    voteClass.put("userID", vote.getUserID());
+                    voteClass.saveInBackground();
                 }
             }
         });
+        //add to totalvotes in paste class
+        ParseQuery<ParseObject> updateTotal = ParseQuery.getQuery("Pastes");
+        updateTotal.whereEqualTo("storyID", vote.getStoryID());
+        updateTotal.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    object.increment("totalvotes");
+                    object.saveInBackground();
+
+                } else {
+                }
+            }
+        });
+
     }
 
     // Updating single Story
@@ -240,14 +259,14 @@ public class database extends SQLiteOpenHelper {
 
     }
 
-    public void addPaste(String storyID, String pasteID, String userID, String paste, String title) {
+    public void addPaste(Pastes paste) {
         ParseObject pastes = new ParseObject("Pastes");
 
-        pastes.put("storyID", storyID);
-        pastes.put("pasteID", pasteID);
-        pastes.put("userID", userID);
-        pastes.put("paste", paste);
-        pastes.put("title", title);
+        pastes.put("storyID", paste.getStoryID());
+        pastes.put("pasteID", paste.getID());
+        pastes.put("userID", paste.getUserID());
+        pastes.put("paste", paste.getUserPaste());
+        pastes.put("title", paste.getTitle());
         pastes.saveInBackground();
     }
 
@@ -263,7 +282,7 @@ public class database extends SQLiteOpenHelper {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
                     pastes.setUserID(object.getString("userID"));
-                    pastes.setID(object.getString("pasteID"), object.getString("storyID"));
+                    pastes.setID(object.getString("pasteID"));
                     pastes.setUserPaste(object.getString("paste"));
                     pastes.setTitle(object.getString("title"));
 

@@ -28,14 +28,14 @@ public class UserPage extends Activity {
 
         boolean isPaste = false;
         boolean isStory = false;
-        userID = extra.getString("userID");
+        userID = appClass.userID;
         try {
-            if ((extra.getString("storyID") != null) && (extra.getString("pasteID") != null)) {
+            if ( (extra.getString("pasteID") != null)) {
                 storyID = extra.getString("storyID");
                 pasteID = extra.getString("pasteID");
                 paste = db.getPaste(pasteID);
                 isPaste = true;
-            } else if (extra.getString("storyID") != null) {
+            } else if ((extra.getString("storyID") != null) ) {
                 storyID = extra.getString("storyID");
                 story = db.getStory(storyID);
                 isStory = true;
@@ -43,13 +43,13 @@ public class UserPage extends Activity {
 
         } catch (Exception e) {
         }
-
+    //show checkbox if the paste/story is a winner
         if (isWinner) {
-
         } else {
             CheckBox CB_winner = ((CheckBox) findViewById(R.id.checkBox_winner));
             CB_winner.setVisibility(View.INVISIBLE);
         }
+
         if (isPaste) {
             ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
             ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
