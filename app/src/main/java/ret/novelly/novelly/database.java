@@ -77,9 +77,9 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     // Get All Storys
     public Object[] getAllStorys() {
         ArrayList<ParseObject> parseObbs = new ArrayList<ParseObject>();
-        HashMap storyIDs = new HashMap();
+        HashMap<String,String> storyIDs = new HashMap<String,String>();
         ArrayList<String> items = new ArrayList<String>();
-     Object[] test = new Object[2];
+        Object[] titleNStrings = new Object[2];
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
         //parse objects
         query.setLimit(10);
@@ -91,14 +91,14 @@ public class database extends AsyncTask<String, Integer, Object[]> {
                 items.add(ob.getString("title"));
                 storyIDs.put(Integer.toString(items.size()), ob.getString("storyID"));
             }
-            test[0]=items;
-            test[1]=storyIDs;
+            titleNStrings[0] = items;
+            titleNStrings[1] = storyIDs;
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return test;
+        return titleNStrings;
     }
 
 
@@ -260,26 +260,23 @@ public class database extends AsyncTask<String, Integer, Object[]> {
 
     @Override
     protected Object[] doInBackground(String... params) {
-//        HashMap storyIDs = new HashMap();
-//        ArrayList<String> items = new ArrayList<String>();
-        ArrayList<ParseObject> test = new ArrayList<ParseObject>();
-//
-       if(params[0]=="getstories"){
-        return getAllStorys();
+
+
+        if (params[0] == "getstories") {
+            return getAllStorys();
         }
 
-       return null;
+        return null;
     }
 
     protected void onPostExecute(Object[] result) {
-        ArrayAdapter adapter = new ArrayAdapter<String>(context, R.layout.mainlisttextbox,(ArrayList<String>) result[0]);
+        Adapter adapter = new Adapter(context, R.layout.mainlisttextbox, (ArrayList<String>) result[0]);
+        //set view IDS from story IDs
+        adapter.setViewIDs((HashMap)result[1]);
         listview.setAdapter(adapter);
 
-        return result[1];
 
     }
-
-
 
 
 }

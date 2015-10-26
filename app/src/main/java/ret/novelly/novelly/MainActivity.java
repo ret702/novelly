@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
     String userID = "";
     static ArrayList<String> items = new ArrayList<String>();
     HashMap storyIDs = new HashMap();
-    ListView userStories;
+   static ListView userStories;
 
 
     @Override
@@ -53,13 +53,13 @@ public class MainActivity extends Activity {
     public void display() {
 
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           View test= getSelectedView ();
+
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int offset = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-                gotoStory.putExtra("storyID",test.);
+                gotoStory.putExtra("storyID",view.getTag().toString());
                 gotoStory.putExtra("userID", userID);
                 startActivity(gotoStory);
             }
