@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,8 @@ public class ViewStoryClass extends Activity {
         setContentView(R.layout.viewstory);
 
         Bundle extra = getIntent().getExtras();
-        db = new database(getApplicationContext());
-        db.getWritableDatabase();
+        ListView test=(ListView) findViewById(R.id.mainlistview);
+        database db = new database(test, this);
 
         userID = appClass.userID;
 
@@ -126,7 +127,7 @@ public class ViewStoryClass extends Activity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.DeletePastes) {
-            (new database(getApplicationContext())).deleteTable("Pastes");
+
         } else if (id == R.id.ViewPastes) {
             Intent intent = new Intent(ViewStoryClass.this, ViewPastes.class);
             intent.putExtra("storyID", storyID);

@@ -2,63 +2,73 @@ package ret.novelly.novelly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends Activity {
     String userID = "";
+    static ArrayList<String> items = new ArrayList<String>();
+    HashMap storyIDs = new HashMap();
+    ListView userStories;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Bundle extra = getIntent().getExtras();
+        userStories= (ListView) findViewById(R.id.mainlistview);
         userID = appClass.userID;
-        final ListView userStories = (ListView) findViewById(R.id.mainlistview);
-        ArrayList<String> item = new ArrayList<String>();
-        final HashMap storyIDs = new HashMap();
-        final ArrayAdapter<String> adaptor;
-        final database db = new database(getApplicationContext());
-        db.getWritableDatabase();
 
-        for (int i = 0; i < db.getAllStorys().size(); i++) {
-            item.add(db.getAllStorys().get(i).getTitle());
-            storyIDs.put(Integer.toString(item.size()), db.getAllStorys().get(i).getID());
-        }
-        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
+        database db = new database(userStories,this);
 
-        userStories.setAdapter(adaptor);
-        userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int offset = 1;
-                Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-                gotoStory.putExtra("storyID", (storyIDs.get(Integer.toString(position + offset))).toString());
-                gotoStory.putExtra("userID", userID);
-                startActivity(gotoStory);
-            }
-        });
+        db.execute("getstories");
+
+
+
+
 
     }
 
 
-    public void onResume()
-    {
+
+    public void display() {
+
+        userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           View test= getSelectedView ();
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int offset = 1;
+                Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
+                gotoStory.putExtra("storyID",test.);
+                gotoStory.putExtra("userID", userID);
+                startActivity(gotoStory);
+            }
+        });
+    }
+
+    public void onResume() {
         super.onResume();
-        recreate();
+
     }
 
     @Override
@@ -83,15 +93,13 @@ public class MainActivity extends Activity {
             intent.putExtra("userID", userID);
             startActivity(intent);
         } else if (id == R.id.deleteall) {
-            database db = new database(getApplicationContext());
-            db.clearDB();
-            recreate();
+
         } else if (id == R.id.deleteDB) {
-            database db = new database(getApplicationContext());
-            db.deleteDB(getApplicationContext());
-            recreate();
+
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

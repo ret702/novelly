@@ -24,14 +24,14 @@ public class ViewPastes extends Activity {
         setContentView(R.layout.activity_view_pastes);
 
         ListView pastes = (ListView) findViewById(R.id.listView_PastesView);
-        final database db = new database(getApplicationContext());
+        final database db = new database(pastes,this);
         Bundle extra = getIntent().getExtras();
         final String storyID = extra.getString("storyID");
         final String userID = appClass.userID;
         ArrayList<String> item = new ArrayList<String>();
         final HashMap pasteID = new HashMap();
         final ArrayAdapter<String> adaptor;
-        db.getWritableDatabase();
+
 
 
         List<Pastes> pasteArr = db.getAllPastes(storyID);
@@ -41,7 +41,7 @@ public class ViewPastes extends Activity {
             pasteID.put(Integer.toString(item.size()), pasteArr.iterator().next().getID());
         }
 
-        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlistviewtextbox, item);
+        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlisttextbox, item);
         pastes.setAdapter(adaptor);
         pastes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

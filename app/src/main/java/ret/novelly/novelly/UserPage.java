@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class UserPage extends Activity {
@@ -23,8 +24,9 @@ public class UserPage extends Activity {
         Bundle extra = getIntent().getExtras();
         Pastes paste = new Pastes();
         Story story = new Story();
-        database db = new database(this);
-        db.getWritableDatabase();
+        ListView test=(ListView) findViewById(R.id.mainlistview);
+        database db = new database(test, this);
+
 
         boolean isPaste = false;
         boolean isStory = false;

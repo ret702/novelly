@@ -1,15 +1,14 @@
 package ret.novelly.novelly;
 
 
-import android.annotation.TargetApi;
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import com.google.android.gms.wearable.internal.StorageInfoResponse;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -17,73 +16,29 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 
-public class database extends SQLiteOpenHelper {
+public class database extends AsyncTask<String, Integer, Object[]> {
     //whether the user has choosen a paste in the same story before
     boolean hasChoosenPrev;
-
-    // Database Version
-    private static final int DATABASE_VERSION = 2;
-    // Database Name
-    private static final String DATABASE_NAME = "Novelly.db";
-
-    public database(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-
-        // SQL statement to create Story table
-        String CREATE_Story_TABLE = "CREATE TABLE Storys ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "userID INTERGER, " +
-                "storyID TEXT, " +
-                "title TEXT, " +
-                "story TEXT )";
-        db.execSQL(CREATE_Story_TABLE);
-
-        String Create_Paste_Table = "CREATE TABLE Pastes ( storyID TEXT, pasteID TEXT, userID TEXT, paste TEXT, title TEXT)";
-        db.execSQL(Create_Paste_Table);
-
-    }
+    ArrayList<Story> stories;
 
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older Storys table if existed
-        db.execSQL("DROP TABLE IF EXISTS Storys");
-        db.execSQL("DROP TABLE IF EXISTS Pastes");
-
-        // create fresh Storys table
-        this.onCreate(db);
-        db.close();
-    }
     //---------------------------------------------------------------------
 
     /**
      * CRUD operations (create "add", read "get", update, delete) Story + get all Storys + delete all Storys
      */
 
-    // Storys table name
-    private static final String TABLE_StoryS = "Storys";
 
-    private static final String TABLE_Pastes = "Pastes";
+    ListView listview;
+    Context context;
 
-    // Storys Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_STORY = "story";
-    private static final String KEY_STORYID = "storyID";
-    //paste specific
-    private static final String KEY_PASTEID = "pasteID";
-    private static final String KEY_PASTE = "paste";
-    private static final String KEY_USERID = "userID";
-
-    private static final String[] COLUMNS_Story = {KEY_ID, KEY_TITLE, KEY_STORY, KEY_STORYID};
-    private static final String[] COLUMNS_Paste = {KEY_TITLE, KEY_STORYID, KEY_PASTEID, KEY_PASTE, KEY_USERID};
+    database(ListView listview, Context context) {
+        this.listview = listview;
+        this.context = context;
+    }
 
     public void addStory(Story story) {
         ParseObject Stories = new ParseObject("Stories");
@@ -97,7 +52,7 @@ public class database extends SQLiteOpenHelper {
 
     public Story getStory(String storyID) {
 
-        final Story story= new Story();
+        final Story story = new Story();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
         query.whereEqualTo("storyID", storyID);
@@ -120,30 +75,30 @@ public class database extends SQLiteOpenHelper {
     }
 
     // Get All Storys
-    public List<Story> getAllStorys() {
-
-        ArrayList<Story> stories = new ArrayList<Story>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
+    public Object[] getAllStorys() {
+        ArrayList<ParseObject> parseObbs = new ArrayList<ParseObject>();
+        HashMap storyIDs = new HashMap();
+        ArrayList<String> items = new ArrayList<String>();
+     Object[] test = new Object[2];
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
         //parse objects
-        List<ParseObject> parseObbs = new ArrayList<ParseObject>();
-
+        query.setLimit(10);
+        query.whereEqualTo("userID", "4f1b3acd-23a7-44fb-9b77-1bce8bd4336d");
         try {
-            parseObbs = query.find();
-            for (ParseObject object : parseObbs) {
-                Story pasteObb = new Story();
-                pasteObb.setID(object.getString("storyID"));
-                pasteObb.setUserID(object.getString("userID"));
-                pasteObb.setUserStory(object.getString("story"));
-                pasteObb.setTitle(object.getString("title"));
-                stories.add(pasteObb);
-            }
+            parseObbs = (ArrayList<ParseObject>) query.find();
 
-        } catch (Exception e) {
-            Log.v("error", e.getMessage());
+            for (ParseObject ob : parseObbs) {
+                items.add(ob.getString("title"));
+                storyIDs.put(Integer.toString(items.size()), ob.getString("storyID"));
+            }
+            test[0]=items;
+            test[1]=storyIDs;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
-        // return pastes
-        return stories;
+        return test;
     }
 
 
@@ -178,7 +133,7 @@ public class database extends SQLiteOpenHelper {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
         query.whereEqualTo("storyID", vote.getStoryID());
-        query.whereEqualTo("userID",vote.getUserID());
+        query.whereEqualTo("userID", vote.getUserID());
 
         List<ParseObject> test = new ArrayList<ParseObject>();
 
@@ -238,25 +193,8 @@ public class database extends SQLiteOpenHelper {
     // Updating single Story
     public int updateStory(Story Story) {
 
-        // 1. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
 
-        // 2. create ContentValues to add key "column"/value
-        ContentValues values = new ContentValues();
-        values.put("title", Story.getTitle()); // get title
-
-
-        // 3. updating row
-        int i = db.update(TABLE_StoryS, //table
-                values, // column/value
-                KEY_ID + " = ?", // selections
-                new String[]{String.valueOf(Story.getID())}); //selection args
-
-        // 4. close
-        db.close();
-
-        return i;
-
+        return 0;
     }
 
     public void addPaste(Pastes paste) {
@@ -298,71 +236,50 @@ public class database extends SQLiteOpenHelper {
 
 
     void deleteTable(String table) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL("DROP TABLE " + table);
-        db.close();
+
     }
 
     // Deleting single Story
     public void deleteStory(Story Story) {
 
-        // 1. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // 2. delete
-        db.delete(TABLE_StoryS,
-                KEY_ID + " = ?",
-                new String[]{String.valueOf(Story.getID())});
-
-        // 3. close
-        db.close();
-
-        Log.d("deleteStory", Story.toString());
 
     }
 
     public void clearDB() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_StoryS + "'");
-        db.delete(TABLE_StoryS, null, null);
-        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + TABLE_Pastes + "'");
-        db.delete(TABLE_Pastes, null, null);
-        db.close();
     }
 
-    @TargetApi(18)
+
     public void deleteDB(Context context) {
-        context.deleteDatabase("Novelly.db");
+
     }
 
     public boolean isEmpty(String table) {
 
-        boolean empty = true;
-        // 1. build the query
-        String query = "SELECT  * FROM " + table;
+        return false;
+    }
 
-        // 2. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        try {
-            Cursor cursor = db.rawQuery(query, null);
-            if (cursor.getCount() == 0) {
-                empty = true;
-            } else {
-                empty = false;
-            }
-            cursor.close();
-
-        } catch (Exception e) {
-
+    @Override
+    protected Object[] doInBackground(String... params) {
+//        HashMap storyIDs = new HashMap();
+//        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<ParseObject> test = new ArrayList<ParseObject>();
+//
+       if(params[0]=="getstories"){
+        return getAllStorys();
         }
 
+       return null;
+    }
 
-        // 3. go over each row, build Story and add it to list
+    protected void onPostExecute(Object[] result) {
+        ArrayAdapter adapter = new ArrayAdapter<String>(context, R.layout.mainlisttextbox,(ArrayList<String>) result[0]);
+        listview.setAdapter(adapter);
 
-        db.close();
-
-        return empty;
+        return result[1];
 
     }
+
+
+
+
 }

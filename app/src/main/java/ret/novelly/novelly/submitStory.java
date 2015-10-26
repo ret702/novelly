@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.UUID;
@@ -48,13 +49,14 @@ public class submitStory extends Activity {
             }
         }
 
+        ListView test=(ListView) findViewById(R.id.mainlistview);
+       final database db = new database(test, this);
 
         Button subButton = (Button) findViewById(R.id.button_submitstory);
         subButton.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             database db = new database(getApplicationContext());
-                                             db.getWritableDatabase();
+
                                              //get story/paste
                                              userText = (((EditText) findViewById(R.id.storyTextbox)).getText()).toString();
                                              //get title
