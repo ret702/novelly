@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -18,11 +19,13 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class database extends AsyncTask<String, Integer, Object[]> {
     //whether the user has choosen a paste in the same story before
     boolean hasChoosenPrev;
     ArrayList<Story> stories;
+    String param;
 
 
     //---------------------------------------------------------------------
@@ -35,9 +38,16 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     ListView listview;
     Context context;
 
-    database(ListView listview, Context context) {
-        this.listview = listview;
+    database(View view, Context context) {
+
+        if (view.getClass() == ListView.class) {
+            this.listview = (ListView) view;
+        }
         this.context = context;
+    }
+
+    database() {
+
     }
 
     public void addStory(Story story) {
@@ -52,24 +62,18 @@ public class database extends AsyncTask<String, Integer, Object[]> {
 
     public Story getStory(String storyID) {
 
-        final Story story = new Story();
+        Story story = new Story();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
         query.whereEqualTo("storyID", storyID);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-
-                    story.setUserID(object.getString("userID"));
-                    story.setID(object.getString("storyID"));
-                    story.setUserStory(object.getString("story"));
-                    story.setTitle(object.getString("title"));
-
-                } else {
-
-                }
-            }
-        });
+        try {
+            ParseObject parseObb = query.getFirst();
+            story.setUserID(parseObb.getString("userID"));
+            story.setID(parseObb.getString("storyID"));
+            story.setUserStory(parseObb.getString("story"));
+            story.setTitle(parseObb.getString("title"));
+        } catch (Exception e) {
+        }
 
         return story;
     }
@@ -77,7 +81,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     // Get All Storys
     public Object[] getAllStorys() {
         ArrayList<ParseObject> parseObbs = new ArrayList<ParseObject>();
-        HashMap<String,String> storyIDs = new HashMap<String,String>();
+        HashMap<String, String> storyIDs = new HashMap<String, String>();
         ArrayList<String> items = new ArrayList<String>();
         Object[] titleNStrings = new Object[2];
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
@@ -89,7 +93,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
 
             for (ParseObject ob : parseObbs) {
                 items.add(ob.getString("title"));
-                storyIDs.put(Integer.toString(items.size()-1), ob.getString("storyID"));
+                storyIDs.put(Integer.toString(items.size() - 1), ob.getString("storyID"));
             }
             titleNStrings[0] = items;
             titleNStrings[1] = storyIDs;
@@ -149,50 +153,39 @@ public class database extends AsyncTask<String, Integer, Object[]> {
             }
         }
 
-
         return hasChoosenPrev;
     }
 
-    protected void addVote(final Vote vote) {
+    protected void addVote(Vote vote) {
+        try {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
-        query.whereEqualTo("storyID", vote.getStoryID());
-        query.whereEqualTo("userID", vote.getUserID());
-        //add to votes class
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    //user has already chosen a paste for story
+            //query
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Votes");
+            query.whereEqualTo("storyID", vote.getStoryID());
+            query.whereEqualTo("userID", vote.getUserID());
+            //add to votes class
+            ParseObject voteOb = query.getFirst();
+            ParseObject voteClass = new ParseObject("Votes");
+            voteClass.put("pasteID", vote.getPasteID());
+            voteClass.put("storyID", vote.getStoryID());
+            voteClass.put("userID", vote.getUserID());
+            voteClass.saveInBackground();
 
-                } else {
-                    ParseObject voteClass = new ParseObject("Votes");
-                    voteClass.put("pasteID", vote.getPasteID());
-                    voteClass.put("storyID", vote.getStoryID());
-                    voteClass.put("userID", vote.getUserID());
-                    voteClass.saveInBackground();
-                }
-            }
-        });
-        //add to totalvotes in paste class
-        ParseQuery<ParseObject> updateTotal = ParseQuery.getQuery("Pastes");
-        updateTotal.whereEqualTo("storyID", vote.getStoryID());
-        updateTotal.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    object.increment("totalvotes");
-                    object.saveInBackground();
+            //add to totalvotes in paste class
+            ParseQuery<ParseObject> updateTotal = ParseQuery.getQuery("Pastes");
+            updateTotal.whereEqualTo("storyID", vote.getStoryID());
+            ParseObject object = updateTotal.getFirst();
+            object.increment("totalvotes");
+            object.saveInBackground();
 
-                } else {
-                }
-            }
-        });
+        } catch (Exception e) {
+
+        }
 
     }
 
     // Updating single Story
     public int updateStory(Story Story) {
-
 
         return 0;
     }
@@ -211,27 +204,22 @@ public class database extends AsyncTask<String, Integer, Object[]> {
 
     public Pastes getPaste(String pasteID) {
 
-        final Pastes pastes = new Pastes();
-
+        Pastes paste = new Pastes();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Pastes");
         query.whereEqualTo("pasteID", pasteID);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    pastes.setUserID(object.getString("userID"));
-                    pastes.setID(object.getString("pasteID"));
-                    pastes.setUserPaste(object.getString("paste"));
-                    pastes.setTitle(object.getString("title"));
-
-                } else {
-
-                }
-            }
-        });
+        try {
+            ParseObject parseObb = query.getFirst();
+            paste.setUserID(parseObb.getString("userID"));
+            paste.setID(parseObb.getString("storyID"));
+            paste.setUserPaste(parseObb.getString("paste"));
+            paste.setTitle(parseObb.getString("title"));
+            paste.setID(parseObb.getString("pasteID"));
+        } catch (Exception e) {
+        }
 
 
-        return pastes;
+        return paste;
     }
 
 
@@ -261,7 +249,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     @Override
     protected Object[] doInBackground(String... params) {
 
-
+        param = params[0];
         if (params[0] == "getstories") {
             return getAllStorys();
         }
@@ -270,10 +258,12 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
     protected void onPostExecute(Object[] result) {
-        Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0],(HashMap)result[1]);
-        //set view IDS from story IDs
+        if (param == "getstories") {
+            Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0], (HashMap) result[1]);
+            //set view IDS from story IDs
 
-        listview.setAdapter(adapter);
+            listview.setAdapter(adapter);
+        }
 
 
     }

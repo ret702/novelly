@@ -17,55 +17,33 @@ public class ViewStoryClass extends Activity {
     private String storyID;
     String userID;
     database db;
-    boolean proceed = false;
     boolean userChoice = false;
     String pasteID;
     boolean hasChosenPrev;
-
+    Story story;
+    Pastes paste;
+    Button pasteItBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewstory);
-
         Bundle extra = getIntent().getExtras();
-        ListView test=(ListView) findViewById(R.id.mainlistview);
-        database db = new database(test, this);
 
         userID = appClass.userID;
-
-
-        Pastes paste;
-        Button pasteItBtn;
 
         //if storyID !=null show story if paste and story ID show, it is a paste, so grab the paste info
         try {
             if ((extra.getString("storyID") != null) && (extra.getString("pasteID") == null)) {
                 storyID = extra.getString("storyID");
+                story = db.getStory(storyID);
                 //grab text
-                ((TextView) findViewById(R.id.viewuserstory)).setText(db.getStory(storyID).getUserStory());
-
+                display("story");
             } else if ((extra.getString("pasteID") != null) && (extra.getString("storyID") != null)) {
-                //get ID's since their not null
                 storyID = extra.getString("storyID");
                 pasteID = extra.getString("pasteID");
                 paste = db.getPaste(pasteID);
-                //grab text
-                ((TextView) findViewById(R.id.viewuserstory)).setText(paste.getUserPaste());
-                //show paste button
-                pasteItBtn = ((Button) findViewById(R.id.VS_btn_pasteit));
-                pasteItBtn.setVisibility(View.VISIBLE);
-
-                pasteItBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(ViewStoryClass.this, pasteConfirmation.class);
-                        startActivityForResult(intent, 1);
-                        overridePendingTransition(R.anim.pushin, R.anim.pushout);
-
-                    }
-                });
+                display("paste");
             }
         } catch (Exception e) {
             Log.v("error", e.getMessage());
@@ -73,6 +51,42 @@ public class ViewStoryClass extends Activity {
 
     }
 
+
+    public void display(String context) {
+
+        TextView userStory = ((TextView) findViewById(R.id.VS_viewuserstory));
+        TextView title = ((TextView) findViewById(R.id.VS_title));
+
+        if (context == "story") {
+
+            userStory.setText(story.getUserStory());
+            title.setText(story.getTitle());
+
+        } else if (context == "paste") {
+
+            //grab text
+            userStory.setText(paste.getUserPaste());
+            title.setText(paste.getTitle());
+
+            //show paste button
+            pasteItBtn = ((Button) findViewById(R.id.VS_btn_pasteit));
+            pasteItBtn.setVisibility(View.VISIBLE);
+            pasteItBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(ViewStoryClass.this, pasteConfirmation.class);
+                    startActivityForResult(intent, 1);
+                    overridePendingTransition(R.anim.pushin, R.anim.pushout);
+
+                }
+            });
+        }
+    }
+
+    /*
+    Animation code
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         overridePendingTransition(R.anim.pushin, R.anim.pushout);
@@ -80,12 +94,12 @@ public class ViewStoryClass extends Activity {
             if (resultCode == Activity.RESULT_OK) {
                 overridePendingTransition(R.anim.pushin, R.anim.pushout);
                 //check if user has chosen a paste related to this story
-                hasChosenPrev = db.validatePaste((new Vote(pasteID,storyID,"")));
+                hasChosenPrev = db.validatePaste((new Vote(pasteID, storyID, "")));
                 //if the user has chosen previously
                 if (hasChosenPrev == true) {
                     Toast.makeText(ViewStoryClass.this, "Sorry you can only choose one paste per story.", Toast.LENGTH_LONG).show();
-                } else if(hasChosenPrev==false) {
-                    db.addVote((new Vote(pasteID,storyID,userID)));
+                } else if (hasChosenPrev == false) {
+                    db.addVote((new Vote(pasteID, storyID, userID)));
                     storyNavigate(storyID, storyID);
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
