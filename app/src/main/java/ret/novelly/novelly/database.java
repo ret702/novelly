@@ -270,7 +270,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
     protected void onPostExecute(Object[] result) {
-        Adapter adapter = new Adapter(context, R.layout.mainlisttextbox, (ArrayList<String>) result[0]);
+        Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0]);
         //set view IDS from story IDs
         adapter.setViewIDs((HashMap)result[1]);
         listview.setAdapter(adapter);

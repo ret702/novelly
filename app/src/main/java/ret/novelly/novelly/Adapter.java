@@ -1,6 +1,8 @@
 package ret.novelly.novelly;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -9,35 +11,43 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Adapter extends ArrayAdapter<String> {
-
+    int layoutID;
+    ArrayList<String> titles;
     HashMap<String,String> IDs;
     public Adapter(Context context, int layout, ArrayList<String> titles) {
-
         super(context,layout,titles);
+        this.titles=titles;
+        this.layoutID=layout;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder holder = null;
+
+
+       View rowView =view;
         // Get the data item for this position
         //TODO:error here
-        if (view == null) {
+        if (rowView == null) {
+            LayoutInflater inflater = ((Activity) getContext()).getLayoutInflater();
+            rowView = inflater.inflate(R.layout.mainlisttextbox, parent, false);
             holder = new ViewHolder();
-            holder.image = (ImageView) view.findViewById(R.id.listview_bookimage);
-            holder.text = (TextView) view.findViewById(R.id.listview_texview);
+            holder.image = (ImageView) rowView.findViewById(R.id.listview_bookimage);
+            holder.text = (TextView) rowView.findViewById(R.id.listview_texview);
             holder.id = IDs.get(position);
-            view.setTag(holder);
-
+            holder.text.setText(titles.get(position));
+            holder.image.setImageResource(R.drawable.icon);
         }
         else {
-            holder = (ViewHolder) view.getTag();
+           holder = (ViewHolder) rowView.getTag();
         }
+            rowView.setTag(holder);
+
 
         // Return the completed view to render on screen
-        return view;
+        return rowView;
     }
 
 
