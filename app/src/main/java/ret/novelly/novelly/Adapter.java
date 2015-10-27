@@ -16,16 +16,16 @@ public class Adapter extends ArrayAdapter<String> {
     int layoutID;
     ArrayList<String> titles;
     HashMap<String,String> IDs;
-    public Adapter(Context context, int layout, ArrayList<String> titles) {
+    public Adapter(Context context, int layout, ArrayList<String> titles, HashMap<String,String> ids) {
         super(context,layout,titles);
         this.titles=titles;
         this.layoutID=layout;
+        this.IDs=ids;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder = null;
-
 
        View rowView =view;
         // Get the data item for this position
@@ -36,14 +36,14 @@ public class Adapter extends ArrayAdapter<String> {
             holder = new ViewHolder();
             holder.image = (ImageView) rowView.findViewById(R.id.listview_bookimage);
             holder.text = (TextView) rowView.findViewById(R.id.listview_texview);
-            holder.id = IDs.get(position);
+            holder.id = IDs.get(Integer.toString(position));
             holder.text.setText(titles.get(position));
             holder.image.setImageResource(R.drawable.icon);
         }
         else {
            holder = (ViewHolder) rowView.getTag();
         }
-            rowView.setTag(holder);
+            rowView.setTag(holder.id);
 
 
         // Return the completed view to render on screen
@@ -51,10 +51,6 @@ public class Adapter extends ArrayAdapter<String> {
     }
 
 
-    protected  void setViewIDs(HashMap ids)
-    {
-        this.IDs=ids;
-    }
     static class ViewHolder {
         ImageView image;
         TextView text;

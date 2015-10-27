@@ -54,12 +54,11 @@ public class MainActivity extends Activity {
 
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int offset = 1;
                 Intent gotoStory = new Intent(MainActivity.this, ViewStoryClass.class);
-                gotoStory.putExtra("storyID",view.getTag().toString());
+               gotoStory.putExtra("storyID",view.getTag().toString());
                 gotoStory.putExtra("userID", userID);
                 startActivity(gotoStory);
             }

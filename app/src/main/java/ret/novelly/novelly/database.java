@@ -89,7 +89,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
 
             for (ParseObject ob : parseObbs) {
                 items.add(ob.getString("title"));
-                storyIDs.put(Integer.toString(items.size()), ob.getString("storyID"));
+                storyIDs.put(Integer.toString(items.size()-1), ob.getString("storyID"));
             }
             titleNStrings[0] = items;
             titleNStrings[1] = storyIDs;
@@ -270,9 +270,9 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
     protected void onPostExecute(Object[] result) {
-        Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0]);
+        Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0],(HashMap)result[1]);
         //set view IDS from story IDs
-        adapter.setViewIDs((HashMap)result[1]);
+
         listview.setAdapter(adapter);
 
 
