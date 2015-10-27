@@ -35,22 +35,21 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         userStories= (ListView) findViewById(R.id.mainlistview);
         userID = appClass.userID;
-
         database db = new database(userStories,this);
+
 
         db.execute("getstories");
 
-
-
-        display();
+        navigate();
 
     }
 
 
 
-    public void display() {
+    public void navigate() {
 
         userStories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

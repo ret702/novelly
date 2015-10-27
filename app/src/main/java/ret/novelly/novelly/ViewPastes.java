@@ -17,44 +17,40 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ViewPastes extends Activity {
+    ListView pastes;
+    database db;
+    String storyID;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_pastes);
+        setContentView(R.layout.activity_main);
 
-        ListView pastes = (ListView) findViewById(R.id.listView_PastesView);
-        final database db = new database(pastes,this);
+        pastes = (ListView) findViewById(R.id.mainlistview);
+        db = new database(pastes, this);
         Bundle extra = getIntent().getExtras();
-        final String storyID = extra.getString("storyID");
-        final String userID = appClass.userID;
-        ArrayList<String> item = new ArrayList<String>();
-        final HashMap pasteID = new HashMap();
-        final ArrayAdapter<String> adaptor;
+        storyID = extra.getString("storyID");
+        userID = appClass.userID;
+// param 1 getter column, param 2 id to search for
+        db.execute("pastes", storyID);
+        navigate();
 
 
+    }
 
-        List<Pastes> pasteArr = db.getAllPastes(storyID);
-        int numOfPaste = pasteArr.size();
-        for (int i = 0; i < numOfPaste; i++) {
-            item.add(pasteArr.get(i).getTitle());
-            pasteID.put(Integer.toString(item.size()), pasteArr.iterator().next().getID());
-        }
-
-        adaptor = new ArrayAdapter<String>(getApplicationContext(), R.layout.mainlisttextbox, item);
-        pastes.setAdapter(adaptor);
+    public void navigate() {
         pastes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int offset = 1;
                 Intent gotoStory = new Intent(ViewPastes.this, ViewStoryClass.class);
-                gotoStory.putExtra("pasteID", (pasteID.get(Integer.toString(position + offset))).toString());
+                gotoStory.putExtra("pasteID",view.getTag().toString() );
                 gotoStory.putExtra("storyID", storyID);
                 startActivity(gotoStory);
             }
         });
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

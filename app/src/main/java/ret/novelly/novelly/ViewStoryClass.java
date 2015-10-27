@@ -2,6 +2,7 @@ package ret.novelly.novelly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +30,13 @@ public class ViewStoryClass extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewstory);
         Bundle extra = getIntent().getExtras();
-
         userID = appClass.userID;
-
+        db = new database();
         //if storyID !=null show story if paste and story ID show, it is a paste, so grab the paste info
         try {
             if ((extra.getString("storyID") != null) && (extra.getString("pasteID") == null)) {
                 storyID = extra.getString("storyID");
+                story = new Story();
                 story = db.getStory(storyID);
                 //grab text
                 display("story");
@@ -60,13 +61,13 @@ public class ViewStoryClass extends Activity {
         if (context == "story") {
 
             userStory.setText(story.getUserStory());
-            title.setText(story.getTitle());
+            title.setText("By: " + story.getTitle());
 
         } else if (context == "paste") {
 
             //grab text
             userStory.setText(paste.getUserPaste());
-            title.setText(paste.getTitle());
+            title.setText("By: " + paste.getTitle());
 
             //show paste button
             pasteItBtn = ((Button) findViewById(R.id.VS_btn_pasteit));
