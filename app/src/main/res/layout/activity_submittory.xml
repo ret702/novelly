@@ -1,20 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ret.novelly.novelly.submitStory">
+    tools:context="ret.novelly.novelly.submitStory"
+
+    android:background="#1F78FF"
+    >
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/storyTextbox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:scrollbars="vertical"
         android:layout_above="@+id/button_submitstory"
-        android:layout_below="@+id/editText_Title"
-   />
+        android:textStyle="bold"
+        android:background="@drawable/button"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@null"
+        android:layout_below="@+id/Label_Title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"/>
 
     <Button
         android:layout_width="match_parent"
@@ -23,7 +30,10 @@
         android:id="@+id/button_submitstory"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/storyTextbox"
-        android:layout_alignEnd="@+id/storyTextbox" />
+        android:layout_alignEnd="@+id/storyTextbox"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        android:background="#FFFFFF"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,13 +43,23 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:gravity="center" />
+        android:textStyle="bold"
+        android:gravity="top"
+        android:layout_margin="10dp"
+        android:textSize="20sp" />
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText_Title"
         android:layout_toRightOf="@+id/Label_Title"
-        android:layout_toEndOf="@+id/Label_Title" />
+        android:layout_toEndOf="@+id/Label_Title"
+        android:singleLine="true"
+        android:background="@drawable/button"
+        android:gravity="bottom"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/storyTextbox"
+        android:layout_alignTop="@+id/Label_Title" />
 
 </RelativeLayout>
