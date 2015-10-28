@@ -15,6 +15,10 @@ public class UserPage extends Activity {
     String pasteID = "";
     String storyID = "";
     boolean isWinner = false;
+    boolean isPaste = false;
+    boolean isStory = false;
+    Pastes paste;
+    Story story;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,42 +26,44 @@ public class UserPage extends Activity {
         setContentView(R.layout.activity_user_page);
 
         Bundle extra = getIntent().getExtras();
-        Pastes paste = new Pastes();
-        Story story = new Story();
-        ListView test=(ListView) findViewById(R.id.mainlistview);
-        database db = new database(test, this);
-
-
-        boolean isPaste = false;
-        boolean isStory = false;
+        database db = new database();
         userID = appClass.userID;
+
         try {
-            if ( (extra.getString("pasteID") != null)) {
+            if ((extra.getString("pasteID") != null)) {
                 storyID = extra.getString("storyID");
                 pasteID = extra.getString("pasteID");
+                paste = new Pastes();
                 paste = db.getPaste(pasteID);
                 isPaste = true;
-            } else if ((extra.getString("storyID") != null) ) {
+                display("paste",true);
+            } else if ((extra.getString("storyID") != null)) {
                 storyID = extra.getString("storyID");
+                story = new Story();
                 story = db.getStory(storyID);
                 isStory = true;
+                display("story",false);
             }
 
         } catch (Exception e) {
         }
-    //show checkbox if the paste/story is a winner
+        //show checkbox if the paste/story is a winner
+
+    }
+
+
+    protected void display(String indentifier, boolean winner) {
         if (isWinner) {
-        } else {
             CheckBox CB_winner = ((CheckBox) findViewById(R.id.checkBox_winner));
             CB_winner.setVisibility(View.INVISIBLE);
         }
-
-        if (isPaste) {
-            ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
-            ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
-        } else if (isStory) {
+        if (indentifier == "story") {
             ((TextView) findViewById(R.id.textView_up_booktext)).setText(story.getUserStory());
             ((TextView) findViewById(R.id.textView_up_booktitle)).setText(story.getTitle());
+        } else if (indentifier == "paste") {
+            ((TextView) findViewById(R.id.textView_up_booktext)).setText(paste.getUserPaste());
+            ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
+
         }
     }
 

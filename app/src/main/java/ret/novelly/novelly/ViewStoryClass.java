@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ViewStoryClass extends Activity {
-    private String storyID;
+     String storyID;
     String userID;
     database db;
     boolean userChoice = false;

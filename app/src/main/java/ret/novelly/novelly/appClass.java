@@ -1,7 +1,9 @@
 package ret.novelly.novelly;
 
 import android.app.Application;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 
 import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
@@ -25,12 +27,12 @@ import java.util.UUID;
 
 public class appClass extends Application {
     protected static String userID = "4f1b3acd-23a7-44fb-9b77-1bce8bd4336d";
-
+    static Typeface font;
     @Override
     public void onCreate() {
         super.onCreate();
 
-
+        font = Typeface.createFromAsset(getAssets(), "frontfont.ttf");
 
 // Might use might not, idk
 //
