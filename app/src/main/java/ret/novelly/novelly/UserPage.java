@@ -65,6 +65,7 @@ public class UserPage extends Activity {
             ((TextView) findViewById(R.id.textView_up_booktitle)).setText(paste.getTitle());
 
         }
+        ((TextView) findViewById(R.id.UP_numberofVotes)).setText(paste.getTotalVotes());
     }
 
     @Override

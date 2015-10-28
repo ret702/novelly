@@ -14,77 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:background="#FFFFFF"
-        >
+        android:id="@+id/scrollView2">
 
 
-     <RelativeLayout
-         android:layout_width="wrap_content"
-         android:layout_height="476dp"
-         android:layout_margin="10dp">
-
-            <TextView
-                android:id="@+id/textView_numOfVotes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Votes"
-                android:textStyle="bold"
-                android:layout_below="@+id/checkBox_winner"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp"/>
-
-            <ImageView
-                android:id="@+id/imageView_up_bookimage"
-                android:layout_width="156dp"
-                android:layout_height="156dp"
-                android:layout_gravity="start"
-                android:src="@drawable/front"
-                android:layout_margin="10dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <CheckBox
-                android:id="@+id/checkBox_winner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="Winner!"
-                android:textColor="#1F78FF"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp"/>
-
-            <TextView
-                android:id="@+id/textView_up_booktext"
-                android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:textStyle="bold"
-                android:layout_below="@+id/textView_up_booktitle" />
-
-            <TextView
-                android:id="@+id/UP_numberofVotes"
-                android:layout_width="158dp"
-                android:layout_height="31dp"
-                android:text="New Text"
-                android:textStyle="bold"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/textView_numOfVotes"
-                android:gravity="right"
-                android:layout_margin="10dp"/>
-
-            <TextView
-                android:id="@+id/textView_up_booktitle"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:gravity="center_horizontal"
-                android:textStyle="bold"
-                android:layout_below="@+id/imageView_up_bookimage"
-                android:layout_alignRight="@+id/UP_numberofVotes"
-                android:layout_alignEnd="@+id/UP_numberofVotes" />
-
-        </RelativeLayout>
     </ScrollView>
 
     <LinearLayout
@@ -119,6 +51,79 @@
 
             />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="476dp"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_alignLeft="@+id/scrollView2"
+        android:layout_alignStart="@+id/scrollView2">
+
+           <TextView
+               android:id="@+id/textView_numOfVotes"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Votes"
+               android:textStyle="bold"
+               android:layout_below="@+id/checkBox_winner"
+               android:layout_alignParentRight="true"
+               android:layout_margin="5dp"
+
+               android:gravity="center" />
+
+           <ImageView
+               android:id="@+id/imageView_up_bookimage"
+               android:layout_width="156dp"
+               android:layout_height="156dp"
+               android:layout_gravity="start"
+               android:src="@drawable/front"
+               android:layout_margin="10dp"
+               android:layout_alignParentTop="true"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true" />
+
+           <CheckBox
+               android:id="@+id/checkBox_winner"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:checked="false"
+               android:text="Winner!"
+               android:textColor="#1F78FF"
+               android:textStyle="bold"
+               android:layout_alignParentTop="false"
+               android:layout_alignParentRight="true"
+               android:layout_margin="10dp"
+               android:gravity="center" />
+
+           <TextView
+               android:id="@+id/textView_up_booktext"
+               android:layout_width="match_parent"
+               android:layout_height="260dp"
+               android:textStyle="bold"
+               android:layout_below="@+id/textView_up_booktitle"
+               android:layout_alignParentBottom="true" />
+
+           <TextView
+               android:id="@+id/UP_numberofVotes"
+               android:layout_width="158dp"
+               android:layout_height="31dp"
+               android:textStyle="bold"
+               android:layout_alignParentRight="true"
+               android:layout_below="@+id/textView_numOfVotes"
+               android:gravity="right"
+               android:layout_margin="5dp"/>
+
+           <TextView
+               android:id="@+id/textView_up_booktitle"
+               android:layout_width="fill_parent"
+               android:layout_height="50dp"
+               android:textStyle="bold"
+               android:layout_below="@+id/imageView_up_bookimage"
+               android:layout_alignRight="@+id/UP_numberofVotes"
+               android:layout_alignEnd="@+id/UP_numberofVotes"
+               android:gravity="left" />
+
+       </RelativeLayout>
 
 </RelativeLayout>
 

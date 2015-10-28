@@ -64,7 +64,7 @@ public class submitStory extends Activity {
                 startActivity((new Intent(submitStory.this, UserPage.class)).putExtra("userID", userID).putExtra(indentifier, ID));
             }
         }, 1500);
-
+        finish();
     }
 
     protected void setClick(Button button) {
@@ -78,7 +78,8 @@ public class submitStory extends Activity {
                                           String title = ((EditText) findViewById(R.id.editText_Title)).getText().toString();
                                           if (isPaste) {
                                               if (!(title.length() == 0)) {
-                                                  Pastes paste = new Pastes(UUID.randomUUID().toString(), storyID, userID, userText, title);
+
+                                                  Pastes paste = new Pastes( storyID, userID, userText, title);
                                                   db.addPaste(paste);
                                                   storyNavigate("pasteID", pasteID);
                                               } else {
@@ -99,6 +100,8 @@ public class submitStory extends Activity {
                                   }
         );
     }
+
+
 
     protected void displayToast(String message) {
         Toast.makeText(submitStory.this, message, Toast.LENGTH_SHORT).show();

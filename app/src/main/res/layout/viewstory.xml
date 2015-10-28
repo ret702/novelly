@@ -37,10 +37,12 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:background="@drawable/icon"
-            android:layout_margin="10dp"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/VS_viewuserstory"
-            android:layout_alignStart="@+id/VS_viewuserstory" />
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <Button
             android:id="@+id/VS_btn_pasteit"
@@ -53,10 +55,12 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:layout_margin="10dp"
             android:visibility="invisible"
             android:background="#1F78FF"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_alignRight="@+id/VS_viewuserstory"
             android:layout_alignEnd="@+id/VS_viewuserstory" />
 
@@ -67,24 +71,25 @@
             android:id="@+id/VS_title"
             android:layout_width="386dp"
             android:layout_height="50dp"
-            android:gravity="center"
-            android:text="New Text"
             android:textStyle="bold"
             android:layout_below="@+id/VS_bookImage"
-            android:layout_alignLeft="@+id/VS_bookImage"
-            android:layout_alignStart="@+id/VS_bookImage" />
+            android:gravity="left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/VS_viewuserstory"
             android:layout_width="fill_parent"
             android:layout_height="281dp"
             android:layout_alignParentBottom="true"
+            android:textStyle="bold"
+            android:layout_below="@+id/VS_title"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_below="@+id/VS_title" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
     </LinearLayout>
 

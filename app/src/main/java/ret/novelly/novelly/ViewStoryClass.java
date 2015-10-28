@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ViewStoryClass extends Activity {
-     String storyID;
+    String storyID;
     String userID;
     database db;
     boolean userChoice = false;
@@ -90,18 +90,20 @@ public class ViewStoryClass extends Activity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        overridePendingTransition(R.anim.pushin, R.anim.pushout);
+        Vote vote = new Vote(pasteID, storyID, userID);
+        db = new database();
+
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 overridePendingTransition(R.anim.pushin, R.anim.pushout);
                 //check if user has chosen a paste related to this story
-                hasChosenPrev = db.validatePaste((new Vote(pasteID, storyID, "")));
+                hasChosenPrev = db.validatePaste(vote);
                 //if the user has chosen previously
                 if (hasChosenPrev == true) {
                     Toast.makeText(ViewStoryClass.this, "Sorry you can only choose one paste per story.", Toast.LENGTH_LONG).show();
                 } else if (hasChosenPrev == false) {
-                    db.addVote((new Vote(pasteID, storyID, userID)));
-                    storyNavigate(storyID, storyID);
+                    db.addVote(vote);
+                    storyNavigate(pasteID, pasteID);
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 overridePendingTransition(R.anim.pushin, R.anim.pushout);

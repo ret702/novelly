@@ -12,19 +12,31 @@ public class Pastes {
     private String pasteID;
     private String storyID;
     private String userID;
+    private  String totalVotes;
 
 
     Pastes() {
 
     }
 
-    Pastes(String pasteID, String storyID,String userID,String paste,String title) {
-        this.pasteID=pasteID;
+
+
+    Pastes( String storyID,String userID,String paste,String title) {
+        this.pasteID=UUID.randomUUID().toString();
         this.storyID=storyID;
         this.userID=userID;
         this.title = title;
         this.paste = paste;
 
+    }
+
+    protected String getTotalVotes()
+    {
+        return totalVotes;
+    }
+    protected void setTotalVotes(String votes)
+    {
+        this.totalVotes=votes;
     }
 
     void setUserID(String userID) {

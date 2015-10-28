@@ -56,10 +56,10 @@
         android:layout_toEndOf="@+id/Label_Title"
         android:singleLine="true"
         android:background="@drawable/button"
-        android:gravity="bottom"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_above="@+id/storyTextbox"
-        android:layout_alignTop="@+id/Label_Title" />
+        android:layout_alignTop="@+id/Label_Title"
+        android:gravity="left" />
 
 </RelativeLayout>

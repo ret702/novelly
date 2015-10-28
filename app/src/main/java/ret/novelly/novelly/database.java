@@ -140,7 +140,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         } catch (ParseException e) {
 
         } finally {
-            if (test == null) {
+            if (test.size()==0) {
                 hasChoosenPrev = false;
             } else {
                 hasChoosenPrev = true;
@@ -196,6 +196,8 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
 
+
+
     public Pastes getPaste(String pasteID) {
 
         Pastes paste = new Pastes();
@@ -209,6 +211,14 @@ public class database extends AsyncTask<String, Integer, Object[]> {
             paste.setUserPaste(parseObb.getString("paste"));
             paste.setTitle(parseObb.getString("title"));
             paste.setID(parseObb.getString("pasteID"));
+            String totalvotes=parseObb.getString("totalotes");
+            if( totalvotes==null)
+            {
+               paste.setTotalVotes("0");
+            }
+            else {
+                paste.setTotalVotes(totalvotes);
+            }
         } catch (Exception e) {
         }
 
