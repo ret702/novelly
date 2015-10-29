@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="ret.novelly.novelly.login">
+    <item
+        android:id="@+id/btnHome"
+        android:icon="@mipmap/home"
+        android:title="@string/home"
+        android:showAsAction="always"
+        android:onClick="goHome"></item>
+
+    <item
+        android:id="@+id/btnUserpage"
+        android:icon="@mipmap/ic_launcher"
+        android:showAsAction="always"
+        android:onClick="goUser"
+        tools:ignore="MenuTitle"></item>
+
+
+     <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100"  android:showAsAction="never"></item>
+
+</menu>
+
+
+
+
