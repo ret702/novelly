@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class BaseActivity extends Activity {
+    // need a boolean to check if we need to change icon so we aren't re-setting the icon every call
+    protected static boolean changeIcon = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +22,18 @@ public class BaseActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       String path= getApplicationInfo().dataDir + "/thumbs/";
+        String path = getApplicationInfo().dataDir + "/thumbs/";
         //TODO:dynamically set avatar here
-        Bitmap thumbnail = BitmapFactory.decodeFile(path + "thumb.png");
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.base, menu);
-        MenuItem item = menu.findItem(R.id.btnUserpage);
-        if (thumbnail != null) {
-            BitmapDrawable icon = new BitmapDrawable(thumbnail);
-            item.setIcon(icon);
+        if (changeIcon) {
+            Bitmap thumbnail = BitmapFactory.decodeFile(path + "thumb.png");
+            MenuItem item = menu.findItem(R.id.btnUserpage);
+            if (thumbnail != null) {
+                BitmapDrawable icon = new BitmapDrawable(thumbnail);
+                item.setIcon(icon);
+            }
+            changeIcon = false;
         }
         return true;
     }

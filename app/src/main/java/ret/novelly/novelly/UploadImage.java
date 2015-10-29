@@ -174,6 +174,7 @@ public class UploadImage extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user_page, menu);
+        BaseActivity.changeIcon=true;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -183,7 +184,6 @@ public class UploadImage extends Activity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
 
         return super.onPrepareOptionsMenu(menu);
     }

@@ -17,5 +17,7 @@
     <string name="Delete_DB">Delete DB</string>
     <string name="title_activity_read">Read</string>
     <string name="title_activity_paste_confirmation">pasteConfirmation</string>
+    <string name="home">Home</string>
+
 
 </resources>
