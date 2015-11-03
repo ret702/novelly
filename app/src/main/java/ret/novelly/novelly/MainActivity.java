@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     String userID = "";
     static ArrayList<String> items = new ArrayList<String>();
     HashMap storyIDs = new HashMap();
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

@@ -17,7 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.parse.ParseFile;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class UploadImage extends Activity {
@@ -114,15 +118,8 @@ public class UploadImage extends Activity {
                                 fOut = new FileOutputStream(file);
                                 //compress images to png
                                 avatarThumb.compress(Bitmap.CompressFormat.PNG, 0, fOut);
-
-                                //byte[] b = baos.toByteArray();
-                                //save data to parse
-                                //database db = new database();
-                                //db.saveAvatar(b);
-
                                 fOut.flush();
                                 fOut.close();
-
                             } else {
                                 file.getParentFile().mkdirs();
                                 file.createNewFile();
@@ -133,6 +130,10 @@ public class UploadImage extends Activity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }
+                        finally {
+                            database db = new database();
+                            db.saveAvatar(file);
                         }
 
                         refreshActionBarMenu(UploadImage.this);
@@ -165,6 +166,8 @@ public class UploadImage extends Activity {
 
 
 
+
+
     @Override
     public void invalidateOptionsMenu() {
         invalid = true;
@@ -174,7 +177,7 @@ public class UploadImage extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user_page, menu);
-        BaseActivity.changeIcon=true;
+
         return super.onCreateOptionsMenu(menu);
     }
 

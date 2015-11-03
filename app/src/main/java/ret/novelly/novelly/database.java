@@ -7,10 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +24,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     boolean hasChoosenPrev;
     ArrayList<Story> stories;
     String indexer;
-
+    //TODO: Change all functions to background tasks
 
     //---------------------------------------------------------------------
 
@@ -72,6 +76,24 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         return story;
     }
 
+
+    public void saveAvatar(File file) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Thumbs");
+        ParseFile parsefile= new ParseFile(file);
+        try {
+            ParseObject parseObb = query.getFirst();
+            parseObb.put("thumb",parsefile);
+            parseObb.saveInBackground();
+        }
+        catch(Exception e) {
+            ParseObject thumb = new ParseObject("Thumbs");
+            thumb.put("thumb",parsefile);
+            thumb.put("userID",appClass.userID);
+            thumb.saveInBackground();
+
+        }
+    }
+
     // Get All Storys
     public Object[] getAllStorys() {
         ArrayList<ParseObject> parseObbs = new ArrayList<ParseObject>();
@@ -81,7 +103,6 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Stories");
         //parse objects
         query.setLimit(10);
-        query.whereEqualTo("userID", "4f1b3acd-23a7-44fb-9b77-1bce8bd4336d");
         try {
             parseObbs = (ArrayList<ParseObject>) query.find();
             for (ParseObject ob : parseObbs) {
@@ -112,11 +133,11 @@ public class database extends AsyncTask<String, Integer, Object[]> {
             parseObbs = query.find();
             for (ParseObject ob : parseObbs) {
                 pastes.add(ob.getString("title"));
-                pasteIDs.put(Integer.toString(pastes.size() - 1), ob.getString("storyID"));
+                pasteIDs.put(Integer.toString(pastes.size() - 1), ob.getString("pasteID"));
             }
 
-            allPastes[0]=pastes;
-            allPastes[1]=pasteIDs;
+            allPastes[0] = pastes;
+            allPastes[1] = pasteIDs;
 
         } catch (Exception e) {
             Log.v("error", e.getMessage());
@@ -140,7 +161,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         } catch (ParseException e) {
 
         } finally {
-            if (test.size()==0) {
+            if (test.size() == 0) {
                 hasChoosenPrev = false;
             } else {
                 hasChoosenPrev = true;
@@ -150,7 +171,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         return hasChoosenPrev;
     }
 
-    protected void addVote(Vote vote) {
+    protected void addVote(final Vote vote) {
         try {
 
             //query
@@ -158,24 +179,35 @@ public class database extends AsyncTask<String, Integer, Object[]> {
             query.whereEqualTo("storyID", vote.getStoryID());
             query.whereEqualTo("userID", vote.getUserID());
             //add to votes class
-            ParseObject voteOb = query.getFirst();
             ParseObject voteClass = new ParseObject("Votes");
             voteClass.put("pasteID", vote.getPasteID());
             voteClass.put("storyID", vote.getStoryID());
             voteClass.put("userID", vote.getUserID());
             voteClass.saveInBackground();
 
-            //add to totalvotes in paste class
-            ParseQuery<ParseObject> updateTotal = ParseQuery.getQuery("Pastes");
-            updateTotal.whereEqualTo("storyID", vote.getStoryID());
-            ParseObject object = updateTotal.getFirst();
-            object.increment("totalvotes");
-            object.saveInBackground();
+//            //add to totalvotes in paste class
+            ParseQuery<ParseObject> updateTotal = ParseQuery.getQuery("TotalVotes");
+            updateTotal.whereEqualTo("pasteID", vote.getPasteID());
 
+            updateTotal.getFirstInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e == null) {
+                        object.increment("votes", 1);
+                        object.saveInBackground();
+                    } else {
+                        ParseObject voteClass = new ParseObject("TotalVotes");
+                        voteClass.put("pasteID", vote.getPasteID());
+                        voteClass.put("storyID", vote.getStoryID());
+                        voteClass.put("votes", 1);
+                        voteClass.saveInBackground();
+                    }
+
+                }
+            });
         } catch (Exception e) {
 
         }
-
     }
 
     // Updating single Story
@@ -196,8 +228,6 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
 
-
-
     public Pastes getPaste(String pasteID) {
 
         Pastes paste = new Pastes();
@@ -211,12 +241,10 @@ public class database extends AsyncTask<String, Integer, Object[]> {
             paste.setUserPaste(parseObb.getString("paste"));
             paste.setTitle(parseObb.getString("title"));
             paste.setID(parseObb.getString("pasteID"));
-            String totalvotes=parseObb.getString("totalotes");
-            if( totalvotes==null)
-            {
-               paste.setTotalVotes("0");
-            }
-            else {
+            String totalvotes = parseObb.getString("totalotes");
+            if (totalvotes == null) {
+                paste.setTotalVotes("0");
+            } else {
                 paste.setTotalVotes(totalvotes);
             }
         } catch (Exception e) {
@@ -256,9 +284,7 @@ public class database extends AsyncTask<String, Integer, Object[]> {
         indexer = params[0];
         if (params[0] == "getstories") {
             return getAllStorys();
-        }
-        else if (params[0]=="pastes")
-        {
+        } else if (params[0] == "pastes") {
             return getAllPastes(params[1].toString());
         }
 
@@ -266,9 +292,9 @@ public class database extends AsyncTask<String, Integer, Object[]> {
     }
 
     protected void onPostExecute(Object[] result) {
-            Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0], (HashMap) result[1]);
-            //set view IDS from story IDs
-            listview.setAdapter(adapter);
+        Adapter adapter = new Adapter(context, R.id.mainlistview, (ArrayList<String>) result[0], (HashMap) result[1]);
+        //set view IDS from story IDs
+        listview.setAdapter(adapter);
 
     }
 

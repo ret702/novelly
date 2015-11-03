@@ -1,16 +1,16 @@
 package ret.novelly.novelly;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class UserPage extends Activity {
+public class UserPage extends BaseActivity {
     String userID = "";
     String pasteID = "";
     String storyID = "";
@@ -36,13 +36,13 @@ public class UserPage extends Activity {
                 paste = new Pastes();
                 paste = db.getPaste(pasteID);
                 isPaste = true;
-                display("paste",true);
+                display("paste", true);
             } else if ((extra.getString("storyID") != null)) {
                 storyID = extra.getString("storyID");
                 story = new Story();
                 story = db.getStory(storyID);
                 isStory = true;
-                display("story",false);
+                display("story", false);
             }
 
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class UserPage extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_user_page, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -86,7 +86,23 @@ public class UserPage extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.upload_image) {
+            Intent intent = new Intent(UserPage.this,UploadImage.class);
+            startActivityForResult(intent, 1);
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(UserPage.this , "Upload Successful!", Toast.LENGTH_LONG);
+            }
+
+        }
     }
 }

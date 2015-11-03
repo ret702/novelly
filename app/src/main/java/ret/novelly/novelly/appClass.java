@@ -32,33 +32,12 @@ public class appClass extends Application {
     public void onCreate() {
         super.onCreate();
 
-        font = Typeface.createFromAsset(getAssets(), "frontfont.ttf");
-
-// Might use might not, idk
-//
-//        //Async Stuff
-//        String result="";
-//        SntpClient.GetNTPAsynctask ntpInstance = new SntpClient.GetNTPAsynctask();
-//        try {
-//            result = ntpInstance.execute().get();
-//        } catch (Exception e) {
-//
-//        }
-//        //get epoch time
-//        Calendar date =  Calendar.getInstance();
-//        int timeZoneOffset= 25200000;
-//        date.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-//        date.setTimeInMillis(Long.parseLong(result) - (timeZoneOffset));
-
-
 
 
         //Parse Stuff
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "8rw0sGCaHLlMEOdD4wPK3youSyvnxk0ZFYkjDbRe", "1D8GpLW324cI2Fgn0htFuSHgCWcHqtlQcNnBq8EB");
-
-
 
 
 

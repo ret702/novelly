@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ViewPastes extends Activity {
+public class ViewPastes extends BaseActivity {
     ListView pastes;
     database db;
     String storyID;
@@ -55,7 +55,7 @@ public class ViewPastes extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_view_pastes, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

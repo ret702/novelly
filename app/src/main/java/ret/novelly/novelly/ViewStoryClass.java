@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ViewStoryClass extends Activity {
+public class ViewStoryClass extends BaseActivity {
     String storyID;
     String userID;
     database db;
@@ -97,13 +97,13 @@ public class ViewStoryClass extends Activity {
             if (resultCode == Activity.RESULT_OK) {
                 overridePendingTransition(R.anim.pushin, R.anim.pushout);
                 //check if user has chosen a paste related to this story
-                hasChosenPrev = db.validatePaste(vote);
+               hasChosenPrev = db.validatePaste(vote);
                 //if the user has chosen previously
                 if (hasChosenPrev == true) {
                     Toast.makeText(ViewStoryClass.this, "Sorry you can only choose one paste per story.", Toast.LENGTH_LONG).show();
                 } else if (hasChosenPrev == false) {
                     db.addVote(vote);
-                    storyNavigate(pasteID, pasteID);
+                    storyNavigate("pasteID", pasteID);
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 overridePendingTransition(R.anim.pushin, R.anim.pushout);
@@ -130,7 +130,7 @@ public class ViewStoryClass extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_view_story_class, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

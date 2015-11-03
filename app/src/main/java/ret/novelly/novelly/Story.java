@@ -17,9 +17,9 @@ public class Story {
 
     }
 
-    Story( String storyID,String userID,String story,String title) {
+    Story( String userID,String story,String title) {
 
-        this.storyID=storyID;
+        this.storyID=UUID.randomUUID().toString();
         this.userID=userID;
         this.title = title;
         this.userStory = story;

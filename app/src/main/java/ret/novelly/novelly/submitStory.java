@@ -17,12 +17,11 @@ import android.widget.Toast;
 import java.util.UUID;
 
 
-public class submitStory extends Activity {
+public class submitStory extends BaseActivity {
 
     private String storyID;
     private boolean isPaste;
     private boolean isStory;
-    private String pasteID;
     final String userID = appClass.userID;
     String userText;
 
@@ -81,7 +80,7 @@ public class submitStory extends Activity {
 
                                                   Pastes paste = new Pastes( storyID, userID, userText, title);
                                                   db.addPaste(paste);
-                                                  storyNavigate("pasteID", pasteID);
+                                                  storyNavigate("pasteID", paste.getID());
                                               } else {
                                                   displayToast("Please Enter A Title");
                                               }
@@ -89,7 +88,7 @@ public class submitStory extends Activity {
                                               //if title not empty
                                               //TODO: add textview validation i.e !=empty
                                               if (!(title.length() == 0)) {
-                                                  Story story = new Story(UUID.randomUUID().toString(), userID, userText, title);
+                                                  Story story = new Story( userID, userText, title);
                                                   db.addStory(story);
                                                   storyNavigate("storyID", storyID);
                                               } else {
@@ -113,7 +112,7 @@ public class submitStory extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         getMenuInflater().inflate(R.menu.menu_user_page, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

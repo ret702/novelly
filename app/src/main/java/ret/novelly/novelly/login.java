@@ -130,10 +130,6 @@ public class login extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextView txt = (TextView) findViewById(R.id.textView_titlePage);
-        Typeface font = Typeface.createFromAsset(getAssets(), "frontfont.ttf");
-        txt.setTypeface(font);
-
 
         // Build GoogleApiClient with access to basic profile
         mGoogleApiClient = new GoogleApiClient.Builder(this)
